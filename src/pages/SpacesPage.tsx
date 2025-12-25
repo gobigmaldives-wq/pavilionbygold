@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users } from "lucide-react";
@@ -6,7 +7,22 @@ import Footer from "@/components/layout/Footer";
 import { SPACES } from "@/types/booking";
 import heroImage from "@/assets/hero-venue.jpg";
 
+type Currency = 'MVR' | 'USD';
+
 const SpacesPage = () => {
+  const [currency, setCurrency] = useState<Currency>('MVR');
+
+  const toggleCurrency = () => {
+    setCurrency(prev => prev === 'MVR' ? 'USD' : 'MVR');
+  };
+
+  const formatPrice = (priceMVR: number, priceUSD: number) => {
+    if (currency === 'MVR') {
+      return `MVR ${priceMVR.toLocaleString()}`;
+    }
+    return `$${priceUSD.toLocaleString()}`;
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -38,6 +54,22 @@ const SpacesPage = () => {
       {/* Spaces Grid */}
       <section className="py-20 md:py-32 bg-background">
         <div className="container mx-auto px-4">
+          {/* Currency Toggle */}
+          <div className="flex justify-center mb-12">
+            <button
+              onClick={toggleCurrency}
+              className="flex items-center gap-2 px-6 py-3 rounded-full border border-gold/30 bg-card hover:bg-muted transition-colors"
+            >
+              <span className={`font-medium ${currency === 'MVR' ? 'text-gold' : 'text-muted-foreground'}`}>
+                MVR
+              </span>
+              <span className="text-muted-foreground">/</span>
+              <span className={`font-medium ${currency === 'USD' ? 'text-gold' : 'text-muted-foreground'}`}>
+                USD
+              </span>
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
             {SPACES.map((space, index) => (
               <div 
@@ -71,10 +103,10 @@ const SpacesPage = () => {
                     <div className="flex flex-wrap items-center gap-6 mb-8">
                       <div className="flex items-center gap-2 text-foreground">
                         <Users size={18} className="text-gold" />
-                        <span>Up to {space.capacity} guests</span>
+                        <span>{space.capacity} Pax Seating</span>
                       </div>
                       <div className="text-2xl font-serif text-gold">
-                        ${space.basePrice.toLocaleString()}
+                        {formatPrice(space.basePriceMVR, space.basePriceUSD)}
                         <span className="text-muted-foreground text-sm font-sans ml-1">/day</span>
                       </div>
                     </div>

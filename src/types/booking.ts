@@ -10,7 +10,8 @@ export interface Space {
   id: SpaceType;
   name: string;
   capacity: number;
-  basePrice: number;
+  basePriceMVR: number;
+  basePriceUSD: number;
   description: string;
 }
 
@@ -78,29 +79,33 @@ export const SPACES: Space[] = [
   {
     id: 'floor1',
     name: 'Floor 1',
-    capacity: 200,
-    basePrice: 5000,
+    capacity: 140,
+    basePriceMVR: 14000,
+    basePriceUSD: 900,
     description: 'Elegant main floor with marble finishes and crystal chandeliers',
   },
   {
     id: 'floor1_garden',
     name: 'Floor 1 Outdoor Garden',
-    capacity: 150,
-    basePrice: 3000,
+    capacity: 60,
+    basePriceMVR: 10000,
+    basePriceUSD: 650,
     description: 'Beautiful outdoor garden space with natural ambiance',
   },
   {
     id: 'floor2',
     name: 'Floor 2',
-    capacity: 180,
-    basePrice: 4500,
+    capacity: 160,
+    basePriceMVR: 14000,
+    basePriceUSD: 900,
     description: 'Upper level with panoramic views and intimate setting',
   },
   {
     id: 'entire_venue',
     name: 'Entire Venue',
-    capacity: 530,
-    basePrice: 12000,
+    capacity: 360,
+    basePriceMVR: 37000,
+    basePriceUSD: 2400,
     description: 'Complete venue access including all floors and garden',
   },
 ];
