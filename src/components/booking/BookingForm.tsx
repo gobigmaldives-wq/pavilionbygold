@@ -32,6 +32,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import SpaceCard from "./SpaceCard";
 import { SPACES, EVENT_TYPES, SpaceType } from "@/types/booking";
 import { cn } from "@/lib/utils";
@@ -59,6 +66,7 @@ const BookingForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState<SpaceType | null>(null);
+  const [rulesDialogOpen, setRulesDialogOpen] = useState(false);
   const { data: bookedDates = [] } = useBookedDates();
 
   const form = useForm<BookingFormData>({
@@ -334,9 +342,13 @@ const BookingForm = () => {
                 <div className="space-y-1 leading-none">
                   <FormLabel className="text-sm font-normal cursor-pointer">
                     I accept the{" "}
-                    <a href="#" className="text-gold hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => setRulesDialogOpen(true)}
+                      className="text-gold hover:underline"
+                    >
                       Pavilion by Gold Rules & Regulations
-                    </a>{" "}
+                    </button>{" "}
                     and understand that this is a booking request pending confirmation.
                   </FormLabel>
                   <FormMessage />
@@ -361,6 +373,62 @@ const BookingForm = () => {
             )}
           </Button>
         </div>
+
+        {/* Rules & Regulations Dialog */}
+        <Dialog open={rulesDialogOpen} onOpenChange={setRulesDialogOpen}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="font-serif text-2xl">Pavilion by Gold Rules & Regulations</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-sm text-muted-foreground">
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">1. Booking & Confirmation</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>All bookings are subject to availability and confirmation by management.</li>
+                  <li>A deposit is required to secure your booking.</li>
+                  <li>Full payment must be made at least 7 days before the event date.</li>
+                </ul>
+              </section>
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">2. Cancellation Policy</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Cancellations made 30+ days before the event: Full refund minus processing fee.</li>
+                  <li>Cancellations made 14-29 days before: 50% refund.</li>
+                  <li>Cancellations made less than 14 days before: No refund.</li>
+                </ul>
+              </section>
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">3. Venue Usage</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>The venue must be vacated by the agreed end time.</li>
+                  <li>No alterations to the venue structure without prior approval.</li>
+                  <li>All decorations must be approved and removed after the event.</li>
+                </ul>
+              </section>
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">4. Conduct & Safety</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>The client is responsible for the behavior of all guests.</li>
+                  <li>Smoking is only permitted in designated areas.</li>
+                  <li>Fire safety regulations must be strictly followed.</li>
+                </ul>
+              </section>
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">5. Damages & Liability</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>The client is liable for any damages caused during the event.</li>
+                  <li>A security deposit may be required for certain events.</li>
+                  <li>Pavilion by Gold is not responsible for personal belongings.</li>
+                </ul>
+              </section>
+            </div>
+            <div className="flex justify-end mt-4">
+              <DialogClose asChild>
+                <Button variant="outline">Close</Button>
+              </DialogClose>
+            </div>
+          </DialogContent>
+        </Dialog>
       </form>
     </Form>
   );
