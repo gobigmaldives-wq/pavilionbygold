@@ -86,10 +86,10 @@ const SpacesPage = () => {
                 className="group bg-card border border-border rounded-2xl overflow-hidden hover:shadow-xl hover:border-gold/30 transition-all duration-300"
               >
                 <div className="flex flex-col md:flex-row">
-                  <div className="md:w-2/5 h-64 md:h-auto bg-muted relative overflow-hidden">
+                  <div className="md:w-2/5 h-64 md:h-auto min-h-[200px] bg-muted relative overflow-hidden flex items-center justify-center">
                     <div 
                       className="absolute inset-0 bg-cover bg-center transform group-hover:scale-105 transition-transform duration-500"
-                      style={{ backgroundImage: `url(${spaceImages[space.id]})` }}
+                      style={{ backgroundImage: `url(${spaceImages[space.id]})`, backgroundPosition: 'center center' }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/20" />
                   </div>
