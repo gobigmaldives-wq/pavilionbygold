@@ -70,7 +70,6 @@ const BookingForm = () => {
   const [rulesDialogOpen, setRulesDialogOpen] = useState(false);
   const [serviceSelections, setServiceSelections] = useState<ServiceSelections>({
     washroomAttendant: false,
-    valetParking: false,
     decorPackage: null,
     avPackage: null,
     cateringPackage: null,
