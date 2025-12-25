@@ -4,8 +4,16 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Users } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { SPACES } from "@/types/booking";
+import { SPACES, SpaceType } from "@/types/booking";
 import heroImage from "@/assets/hero-venue.jpg";
+import floor2Image from "@/assets/space-floor2.jpg";
+
+const spaceImages: Record<SpaceType, string> = {
+  floor1: heroImage,
+  floor1_garden: heroImage,
+  floor2: floor2Image,
+  entire_venue: heroImage,
+};
 
 type Currency = 'MVR' | 'USD';
 
@@ -80,7 +88,7 @@ const SpacesPage = () => {
                   <div className="md:w-2/5 h-64 md:h-auto bg-muted relative overflow-hidden">
                     <div 
                       className="absolute inset-0 bg-cover bg-center transform group-hover:scale-105 transition-transform duration-500"
-                      style={{ backgroundImage: `url(${heroImage})` }}
+                      style={{ backgroundImage: `url(${spaceImages[space.id]})` }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/20" />
                   </div>
