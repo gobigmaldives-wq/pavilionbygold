@@ -2,7 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Sparkles, Palette, Volume2, UtensilsCrossed } from "lucide-react";
+import { useState } from "react";
 
 export interface ServiceSelections {
   washroomAttendant: boolean;
@@ -17,31 +19,102 @@ interface AdditionalServicesProps {
 }
 
 const DECOR_PACKAGES = [
-  { id: "classic", name: "Classic", description: "Essential venue styling" },
-  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting" },
-  { id: "premium", name: "Premium", description: "Full venue transformation" },
+  { id: "classic", name: "Classic", description: "Essential venue styling", priceRf: 5000, priceUsd: 325 },
+  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting", priceRf: 10000, priceUsd: 650 },
+  { id: "premium", name: "Premium", description: "Full venue transformation", priceRf: 18000, priceUsd: 1170 },
 ];
 
 const AV_PACKAGES = [
-  { id: "basic", name: "Basic AV", description: "Microphone & speakers" },
-  { id: "standard", name: "Standard AV", description: "Full sound system & projector" },
-  { id: "premium", name: "Premium AV", description: "Professional setup with lighting" },
+  { id: "basic", name: "Basic AV", description: "Microphone & speakers", priceRf: 3000, priceUsd: 195 },
+  { id: "standard", name: "Standard AV", description: "Full sound system & projector", priceRf: 6000, priceUsd: 390 },
+  { id: "premium", name: "Premium AV", description: "Professional setup with lighting", priceRf: 12000, priceUsd: 780 },
 ];
 
 const CATERING_PACKAGES = [
-  { id: "silver", name: "Silver Package", description: "Essential menu selection" },
-  { id: "gold", name: "Gold Package", description: "Premium menu with variety" },
-  { id: "platinum", name: "Platinum Package", description: "Luxury dining experience" },
+  { id: "silver", name: "Silver Package", description: "Essential menu selection", priceRf: 8000, priceUsd: 520 },
+  { id: "gold", name: "Gold Package", description: "Premium menu with variety", priceRf: 15000, priceUsd: 975 },
+  { id: "platinum", name: "Platinum Package", description: "Luxury dining experience", priceRf: 25000, priceUsd: 1625 },
 ];
 
+const VENUE_UPGRADES = {
+  washroomAttendant: { priceRf: 1500, priceUsd: 100 },
+};
+
 const AdditionalServices = ({ selections, onSelectionChange }: AdditionalServicesProps) => {
+  const [currency, setCurrency] = useState<"rf" | "usd">("rf");
+
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
     onSelectionChange({ ...selections, [key]: value });
   };
 
+  const formatPrice = (priceRf: number, priceUsd: number) => {
+    return currency === "rf" ? `Rf. ${priceRf.toLocaleString()}` : `$${priceUsd.toLocaleString()}`;
+  };
+
+  const calculateTotal = () => {
+    let totalRf = 0;
+    let totalUsd = 0;
+
+    if (selections.washroomAttendant) {
+      totalRf += VENUE_UPGRADES.washroomAttendant.priceRf;
+      totalUsd += VENUE_UPGRADES.washroomAttendant.priceUsd;
+    }
+
+    if (selections.decorPackage) {
+      const pkg = DECOR_PACKAGES.find(p => p.id === selections.decorPackage);
+      if (pkg) {
+        totalRf += pkg.priceRf;
+        totalUsd += pkg.priceUsd;
+      }
+    }
+
+    if (selections.avPackage) {
+      const pkg = AV_PACKAGES.find(p => p.id === selections.avPackage);
+      if (pkg) {
+        totalRf += pkg.priceRf;
+        totalUsd += pkg.priceUsd;
+      }
+    }
+
+    if (selections.cateringPackage) {
+      const pkg = CATERING_PACKAGES.find(p => p.id === selections.cateringPackage);
+      if (pkg) {
+        totalRf += pkg.priceRf;
+        totalUsd += pkg.priceUsd;
+      }
+    }
+
+    return { totalRf, totalUsd };
+  };
+
+  const { totalRf, totalUsd } = calculateTotal();
+  const hasSelections = totalRf > 0;
+
   return (
     <div className="bg-card border border-border rounded-xl p-6 md:p-8">
-      <h2 className="font-serif text-2xl text-foreground mb-2">Additional Services</h2>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="font-serif text-2xl text-foreground">Additional Services</h2>
+        <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+          <Button
+            type="button"
+            variant={currency === "rf" ? "default" : "ghost"}
+            size="sm"
+            className="h-7 px-3 text-xs"
+            onClick={() => setCurrency("rf")}
+          >
+            Rf.
+          </Button>
+          <Button
+            type="button"
+            variant={currency === "usd" ? "default" : "ghost"}
+            size="sm"
+            className="h-7 px-3 text-xs"
+            onClick={() => setCurrency("usd")}
+          >
+            USD
+          </Button>
+        </div>
+      </div>
       <p className="text-muted-foreground text-sm mb-6">Enhance your event with our premium add-ons (Optional)</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -62,10 +135,15 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
                 checked={selections.washroomAttendant}
                 onCheckedChange={(checked) => updateSelection("washroomAttendant", checked as boolean)}
               />
-              <div className="space-y-1">
-                <Label htmlFor="washroomAttendant" className="text-sm font-medium cursor-pointer">
-                  Washroom Attendant
-                </Label>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="washroomAttendant" className="text-sm font-medium cursor-pointer">
+                    Washroom Attendant
+                  </Label>
+                  <span className="text-sm font-medium text-gold">
+                    {formatPrice(VENUE_UPGRADES.washroomAttendant.priceRf, VENUE_UPGRADES.washroomAttendant.priceUsd)}
+                  </span>
+                </div>
                 <p className="text-xs text-muted-foreground">Professional attendant service</p>
               </div>
             </div>
@@ -93,10 +171,15 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
               {DECOR_PACKAGES.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
                   <RadioGroupItem value={pkg.id} id={`decor-${pkg.id}`} />
-                  <div>
-                    <Label htmlFor={`decor-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                      {pkg.name}
-                    </Label>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor={`decor-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                        {pkg.name}
+                      </Label>
+                      <span className="text-sm font-medium text-gold">
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                      </span>
+                    </div>
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
                   </div>
                 </div>
@@ -130,10 +213,15 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
               {AV_PACKAGES.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
                   <RadioGroupItem value={pkg.id} id={`av-${pkg.id}`} />
-                  <div>
-                    <Label htmlFor={`av-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                      {pkg.name}
-                    </Label>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor={`av-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                        {pkg.name}
+                      </Label>
+                      <span className="text-sm font-medium text-gold">
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                      </span>
+                    </div>
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
                   </div>
                 </div>
@@ -170,10 +258,15 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
               {CATERING_PACKAGES.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
                   <RadioGroupItem value={pkg.id} id={`catering-${pkg.id}`} />
-                  <div>
-                    <Label htmlFor={`catering-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                      {pkg.name}
-                    </Label>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor={`catering-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                        {pkg.name}
+                      </Label>
+                      <span className="text-sm font-medium text-gold">
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                      </span>
+                    </div>
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
                   </div>
                 </div>
@@ -189,6 +282,18 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
           </CardContent>
         </Card>
       </div>
+
+      {/* Running Total */}
+      {hasSelections && (
+        <div className="mt-6 p-4 bg-gold/10 rounded-lg border border-gold/20">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-foreground">Additional Services Total</span>
+            <span className="text-lg font-semibold text-gold">
+              {currency === "rf" ? `Rf. ${totalRf.toLocaleString()}` : `$${totalUsd.toLocaleString()}`}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
