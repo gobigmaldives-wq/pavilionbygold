@@ -50,6 +50,10 @@ const Footer = () => {
                 <Phone size={18} className="text-gold flex-shrink-0" />
                 <span>+(960) 7979766</span>
               </li>
+              <li className="flex items-center gap-3 text-sm text-cream/70">
+                <Mail size={18} className="text-gold flex-shrink-0" />
+                <span>events@pavilionbygold.com</span>
+              </li>
             </ul>
           </div>
 
