@@ -19,25 +19,25 @@ interface AdditionalServicesProps {
 }
 
 const DECOR_PACKAGES = [
-  { id: "classic", name: "Classic", description: "Essential venue styling", priceRf: 5000, priceUsd: 325 },
-  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting", priceRf: 10000, priceUsd: 650 },
-  { id: "premium", name: "Premium", description: "Full venue transformation", priceRf: 18000, priceUsd: 1170 },
+  { id: "classic", name: "Classic", description: "Essential venue styling", priceRf: 20000, priceUsd: 1300 },
+  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting", priceRf: 50000, priceUsd: 3250 },
+  { id: "premium", name: "Premium", description: "Full venue transformation", priceRf: 100000, priceUsd: 6500 },
 ];
 
 const AV_PACKAGES = [
-  { id: "basic", name: "Basic AV", description: "Microphone & speakers", priceRf: 3000, priceUsd: 195 },
-  { id: "standard", name: "Standard AV", description: "Full sound system & projector", priceRf: 6000, priceUsd: 390 },
-  { id: "premium", name: "Premium AV", description: "Professional setup with lighting", priceRf: 12000, priceUsd: 780 },
+  { id: "basic", name: "Basic AV", description: "Microphone & speakers", priceRf: 15000, priceUsd: 975 },
+  { id: "standard", name: "Standard AV", description: "Full sound system & projector", priceRf: 30000, priceUsd: 1950 },
+  { id: "premium", name: "Premium AV", description: "Professional setup with lighting", priceRf: 50000, priceUsd: 3250 },
 ];
 
 const CATERING_PACKAGES = [
-  { id: "silver", name: "Silver Package", description: "Essential menu selection", priceRf: 8000, priceUsd: 520 },
-  { id: "gold", name: "Gold Package", description: "Premium menu with variety", priceRf: 15000, priceUsd: 975 },
-  { id: "platinum", name: "Platinum Package", description: "Luxury dining experience", priceRf: 25000, priceUsd: 1625 },
+  { id: "silver", name: "Silver Package", description: "Per person", priceRf: 160, priceUsd: 10 },
+  { id: "gold", name: "Gold Package", description: "Per person", priceRf: 190, priceUsd: 12 },
+  { id: "platinum", name: "Platinum Package", description: "Per person", priceRf: 230, priceUsd: 15 },
 ];
 
 const VENUE_UPGRADES = {
-  washroomAttendant: { priceRf: 1500, priceUsd: 100 },
+  washroomAttendant: { priceRf: 2000, priceUsd: 130 },
 };
 
 const AdditionalServices = ({ selections, onSelectionChange }: AdditionalServicesProps) => {
