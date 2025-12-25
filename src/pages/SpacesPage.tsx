@@ -7,12 +7,13 @@ import Footer from "@/components/layout/Footer";
 import { SPACES, SpaceType } from "@/types/booking";
 import heroImage from "@/assets/hero-venue.jpg";
 import floor2Image from "@/assets/space-floor2.jpg";
+import entireVenueImage from "@/assets/space-entire-venue.jpg";
 
 const spaceImages: Record<SpaceType, string> = {
   floor1: heroImage,
   floor1_garden: heroImage,
   floor2: floor2Image,
-  entire_venue: heroImage,
+  entire_venue: entireVenueImage,
 };
 
 type Currency = 'MVR' | 'USD';
