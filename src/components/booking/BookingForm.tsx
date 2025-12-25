@@ -40,6 +40,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import SpaceCard from "./SpaceCard";
+import AdditionalServices, { ServiceSelections } from "./AdditionalServices";
 import { SPACES, EVENT_TYPES, SpaceType } from "@/types/booking";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,6 +68,12 @@ const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState<SpaceType | null>(null);
   const [rulesDialogOpen, setRulesDialogOpen] = useState(false);
+  const [serviceSelections, setServiceSelections] = useState<ServiceSelections>({
+    washroomAttendant: false,
+    decorPackage: null,
+    avPackage: null,
+    cateringPackage: null,
+  });
   const { data: bookedDates = [] } = useBookedDates();
 
   const form = useForm<BookingFormData>({
@@ -306,6 +313,12 @@ const BookingForm = () => {
               )}
             />
           </div>
+
+          {/* Additional Services */}
+          <AdditionalServices
+            selections={serviceSelections}
+            onSelectionChange={setServiceSelections}
+          />
 
           <FormField
             control={form.control}
