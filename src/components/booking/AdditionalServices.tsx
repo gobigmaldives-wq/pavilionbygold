@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Palette, Volume2, UtensilsCrossed } from "lucide-react";
 import { useState } from "react";
+import { SPACES, SpaceType } from "@/types/booking";
 
 export interface ServiceSelections {
   washroomAttendant: boolean;
@@ -17,6 +18,7 @@ interface AdditionalServicesProps {
   selections: ServiceSelections;
   onSelectionChange: (selections: ServiceSelections) => void;
   guestCount: number;
+  selectedSpace: SpaceType | null;
 }
 
 const DECOR_PACKAGES = [
@@ -41,7 +43,7 @@ const VENUE_UPGRADES = {
   washroomAttendant: { priceRf: 2000, priceUsd: 130 },
 };
 
-const AdditionalServices = ({ selections, onSelectionChange, guestCount }: AdditionalServicesProps) => {
+const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpace }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
 
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
@@ -55,6 +57,15 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount }: Addit
   const calculateTotal = () => {
     let totalRf = 0;
     let totalUsd = 0;
+
+    // Add space price
+    if (selectedSpace) {
+      const space = SPACES.find(s => s.id === selectedSpace);
+      if (space) {
+        totalRf += space.basePriceMVR;
+        totalUsd += space.basePriceUSD;
+      }
+    }
 
     if (selections.washroomAttendant) {
       totalRf += VENUE_UPGRADES.washroomAttendant.priceRf;
@@ -89,7 +100,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount }: Addit
   };
 
   const { totalRf, totalUsd } = calculateTotal();
-  const hasSelections = totalRf > 0;
+  const hasSelections = selectedSpace || selections.washroomAttendant || selections.decorPackage || selections.avPackage || selections.cateringPackage;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 md:p-8">
