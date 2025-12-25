@@ -35,6 +35,8 @@ import {
 import SpaceCard from "./SpaceCard";
 import { SPACES, EVENT_TYPES, SpaceType } from "@/types/booking";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useBookedDates, isDateBlockedForSpace } from "@/hooks/useBookedDates";
 
 const bookingSchema = z.object({
   fullName: z.string().min(2, "Full name is required").max(100),
@@ -57,6 +59,7 @@ const BookingForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState<SpaceType | null>(null);
+  const { data: bookedDates = [] } = useBookedDates();
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
@@ -73,18 +76,36 @@ const BookingForm = () => {
   const onSubmit = async (data: BookingFormData) => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    // In production, this would create the booking in the database
-    console.log("Booking submitted:", data);
-    
-    toast.success("Booking request submitted successfully!", {
-      description: "We'll contact you shortly to confirm your reservation.",
-    });
-    
-    setIsSubmitting(false);
-    navigate("/booking-success");
+    try {
+      const { error } = await supabase.from("bookings").insert({
+        full_name: data.fullName,
+        phone: data.phone,
+        email: data.email,
+        company_name: data.companyName || null,
+        event_type: data.eventType,
+        event_date: format(data.eventDate, "yyyy-MM-dd"),
+        space: data.space,
+        guest_count: data.guestCount,
+        notes: data.notes || null,
+        agreed_to_rules: data.agreedToRules,
+        agreed_at: new Date().toISOString(),
+      });
+
+      if (error) throw error;
+
+      toast.success("Booking request submitted successfully!", {
+        description: "We'll contact you shortly to confirm your reservation.",
+      });
+      
+      navigate("/booking-success");
+    } catch (error) {
+      console.error("Booking error:", error);
+      toast.error("Failed to submit booking request", {
+        description: "Please try again or contact us directly.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -213,8 +234,14 @@ const BookingForm = () => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
+                        disabled={(date) => {
+                          // Block past dates
+                          if (date < new Date(new Date().setHours(0, 0, 0, 0))) return true;
+                          // Block dates that are already booked for the selected space
+                          return isDateBlockedForSpace(date, selectedSpace, bookedDates);
+                        }}
                         initialFocus
+                        className={cn("p-3 pointer-events-auto")}
                       />
                     </PopoverContent>
                   </Popover>

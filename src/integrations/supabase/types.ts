@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          agreed_at: string | null
+          agreed_to_rules: boolean
+          company_name: string | null
+          created_at: string
+          email: string
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          full_name: string
+          guest_count: number
+          id: string
+          notes: string | null
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          phone: string
+          space: Database["public"]["Enums"]["space_type"]
+          status: Database["public"]["Enums"]["booking_status"]
+          updated_at: string
+        }
+        Insert: {
+          agreed_at?: string | null
+          agreed_to_rules?: boolean
+          company_name?: string | null
+          created_at?: string
+          email: string
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          full_name: string
+          guest_count: number
+          id?: string
+          notes?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          phone: string
+          space: Database["public"]["Enums"]["space_type"]
+          status?: Database["public"]["Enums"]["booking_status"]
+          updated_at?: string
+        }
+        Update: {
+          agreed_at?: string | null
+          agreed_to_rules?: boolean
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          event_date?: string
+          event_type?: Database["public"]["Enums"]["event_type"]
+          full_name?: string
+          guest_count?: number
+          id?: string
+          notes?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          phone?: string
+          space?: Database["public"]["Enums"]["space_type"]
+          status?: Database["public"]["Enums"]["booking_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +79,16 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      booking_status:
+        | "pending"
+        | "approved"
+        | "confirmed"
+        | "completed"
+        | "cancelled"
+        | "rejected"
+      event_type: "wedding" | "corporate" | "private" | "ramadan" | "other"
+      payment_status: "pending" | "partial" | "paid" | "refunded"
+      space_type: "floor1" | "floor1_garden" | "floor2" | "entire_venue"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +215,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      booking_status: [
+        "pending",
+        "approved",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "rejected",
+      ],
+      event_type: ["wedding", "corporate", "private", "ramadan", "other"],
+      payment_status: ["pending", "partial", "paid", "refunded"],
+      space_type: ["floor1", "floor1_garden", "floor2", "entire_venue"],
+    },
   },
 } as const
