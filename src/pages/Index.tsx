@@ -44,7 +44,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="border-cream/30 text-cream hover:bg-cream/10 px-8 py-6 text-lg"
+                className="border-charcoal/50 bg-background/80 text-charcoal hover:bg-background px-8 py-6 text-lg"
               >
                 Explore Spaces
               </Button>
