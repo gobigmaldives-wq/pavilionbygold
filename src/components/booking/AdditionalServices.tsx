@@ -6,6 +6,7 @@ import { Sparkles, Palette, Volume2, UtensilsCrossed } from "lucide-react";
 
 export interface ServiceSelections {
   washroomAttendant: boolean;
+  valetParking: boolean;
   decorPackage: string | null;
   avPackage: string | null;
   cateringPackage: string | null;
@@ -55,7 +56,7 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
               <CardTitle className="text-base font-medium">Venue Upgrades</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="pt-0">
+          <CardContent className="pt-0 space-y-3">
             <div className="flex items-start space-x-3">
               <Checkbox
                 id="washroomAttendant"
@@ -67,6 +68,19 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
                   Washroom Attendant
                 </Label>
                 <p className="text-xs text-muted-foreground">Professional attendant service</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="valetParking"
+                checked={selections.valetParking}
+                onCheckedChange={(checked) => updateSelection("valetParking", checked as boolean)}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="valetParking" className="text-sm font-medium cursor-pointer">
+                  Valet Parking
+                </Label>
+                <p className="text-xs text-muted-foreground">Parking for 5 cars</p>
               </div>
             </div>
           </CardContent>
