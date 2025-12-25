@@ -15,7 +15,7 @@ const AdminSettings = () => {
   const [depositPercentage, setDepositPercentage] = useState(50);
   const [splitEventAllowed, setSplitEventAllowed] = useState(false);
   const [spacePrices, setSpacePrices] = useState<Record<string, number>>(
-    Object.fromEntries(SPACES.map(s => [s.id, s.basePrice]))
+    Object.fromEntries(SPACES.map(s => [s.id, s.basePriceMVR]))
   );
   const [addOnPrices, setAddOnPrices] = useState<Record<string, number>>(
     Object.fromEntries(ADD_ONS.map(a => [a.id, a.price]))
