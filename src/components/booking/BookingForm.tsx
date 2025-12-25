@@ -68,6 +68,7 @@ const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState<SpaceType | null>(null);
   const [rulesDialogOpen, setRulesDialogOpen] = useState(false);
+  const [spaceCurrency, setSpaceCurrency] = useState<"rf" | "usd">("rf");
   const [serviceSelections, setServiceSelections] = useState<ServiceSelections>({
     washroomAttendant: false,
     decorPackage: null,
@@ -292,7 +293,29 @@ const BookingForm = () => {
               name="space"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-lg">Select Your Space *</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel className="text-lg">Select Your Space *</FormLabel>
+                    <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                      <Button
+                        type="button"
+                        variant={spaceCurrency === "rf" ? "default" : "ghost"}
+                        size="sm"
+                        className="h-7 px-3 text-xs"
+                        onClick={() => setSpaceCurrency("rf")}
+                      >
+                        Rf.
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={spaceCurrency === "usd" ? "default" : "ghost"}
+                        size="sm"
+                        className="h-7 px-3 text-xs"
+                        onClick={() => setSpaceCurrency("usd")}
+                      >
+                        USD
+                      </Button>
+                    </div>
+                  </div>
                   <FormControl>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       {SPACES.map((space) => (
@@ -300,6 +323,7 @@ const BookingForm = () => {
                           key={space.id}
                           space={space}
                           selected={selectedSpace === space.id}
+                          currency={spaceCurrency}
                           onSelect={() => {
                             setSelectedSpace(space.id);
                             field.onChange(space.id);
