@@ -23,19 +23,19 @@ interface AdditionalServicesProps {
 
 const DECOR_PACKAGES = [
   { id: "classic", name: "Classic", description: "Essential venue styling", priceRf: 20000, priceUsd: 1300 },
-  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting", priceRf: 50000, priceUsd: 3250 },
-  { id: "premium", name: "Premium", description: "Full venue transformation", priceRf: 100000, priceUsd: 6500 },
+  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting", priceRf: 50000, priceUsd: 3240 },
+  { id: "premium", name: "Premium", description: "Full venue transformation", priceRf: 100000, priceUsd: 6485 },
 ];
 
 const AV_PACKAGES = [
   { id: "basic", name: "Basic AV", description: "Microphone & speakers", priceRf: 15000, priceUsd: 975 },
   { id: "standard", name: "Standard AV", description: "Full sound system & projector", priceRf: 30000, priceUsd: 1950 },
-  { id: "premium", name: "Premium AV", description: "Professional setup with lighting", priceRf: 50000, priceUsd: 3250 },
+  { id: "premium", name: "Premium AV", description: "Professional setup with lighting", priceRf: 50000, priceUsd: 3245 },
 ];
 
 const CATERING_PACKAGES = [
-  { id: "silver", name: "Silver Package", description: "Per person", priceRf: 160, priceUsd: 10 },
-  { id: "gold", name: "Gold Package", description: "Per person", priceRf: 190, priceUsd: 12 },
+  { id: "silver", name: "Silver Package", description: "Per person", priceRf: 160, priceUsd: 9 },
+  { id: "gold", name: "Gold Package", description: "Per person", priceRf: 190, priceUsd: 12.5 },
   { id: "platinum", name: "Platinum Package", description: "Per person", priceRf: 230, priceUsd: 15 },
 ];
 
