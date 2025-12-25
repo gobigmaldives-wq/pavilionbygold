@@ -41,7 +41,7 @@ const SpaceCard = ({ space, selected, onSelect, disabled }: SpaceCardProps) => {
           <span className="text-sm">Up to {space.capacity} guests</span>
         </div>
         <div className="text-gold font-semibold">
-          MVR {space.basePriceMVR.toLocaleString()}
+          Rf. {space.basePriceMVR.toLocaleString()}
         </div>
       </div>
     </button>

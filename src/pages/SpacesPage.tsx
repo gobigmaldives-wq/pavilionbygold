@@ -18,7 +18,7 @@ const SpacesPage = () => {
 
   const formatPrice = (priceMVR: number, priceUSD: number) => {
     if (currency === 'MVR') {
-      return `MVR ${priceMVR.toLocaleString()}`;
+      return `Rf. ${priceMVR.toLocaleString()}`;
     }
     return `$${priceUSD.toLocaleString()}`;
   };
