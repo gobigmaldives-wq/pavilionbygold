@@ -318,6 +318,7 @@ const BookingForm = () => {
           <AdditionalServices
             selections={serviceSelections}
             onSelectionChange={setServiceSelections}
+            guestCount={form.watch("guestCount") || 0}
           />
 
           <FormField

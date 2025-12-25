@@ -16,6 +16,7 @@ export interface ServiceSelections {
 interface AdditionalServicesProps {
   selections: ServiceSelections;
   onSelectionChange: (selections: ServiceSelections) => void;
+  guestCount: number;
 }
 
 const DECOR_PACKAGES = [
@@ -40,7 +41,7 @@ const VENUE_UPGRADES = {
   washroomAttendant: { priceRf: 2000, priceUsd: 130 },
 };
 
-const AdditionalServices = ({ selections, onSelectionChange }: AdditionalServicesProps) => {
+const AdditionalServices = ({ selections, onSelectionChange, guestCount }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
 
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
@@ -79,8 +80,8 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
     if (selections.cateringPackage) {
       const pkg = CATERING_PACKAGES.find(p => p.id === selections.cateringPackage);
       if (pkg) {
-        totalRf += pkg.priceRf;
-        totalUsd += pkg.priceUsd;
+        totalRf += pkg.priceRf * guestCount;
+        totalUsd += pkg.priceUsd * guestCount;
       }
     }
 
@@ -287,7 +288,7 @@ const AdditionalServices = ({ selections, onSelectionChange }: AdditionalService
       {hasSelections && (
         <div className="mt-6 p-4 bg-gold/10 rounded-lg border border-gold/20">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-foreground">Additional Services Total</span>
+            <span className="text-sm font-medium text-foreground">All Selected Services Total</span>
             <span className="text-lg font-semibold text-gold">
               {currency === "rf" ? `Rf. ${totalRf.toLocaleString()}` : `$${totalUsd.toLocaleString()}`}
             </span>
