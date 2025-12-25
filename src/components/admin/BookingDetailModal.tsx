@@ -146,17 +146,17 @@ const BookingDetailModal = ({
             <div className="bg-muted/50 rounded-lg p-4 space-y-3">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Base Venue Fee ({space?.name})</span>
-                <span className="font-medium">MVR {space?.basePriceMVR.toLocaleString()}</span>
+                <span className="font-medium">Rf. {space?.basePriceMVR.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">GST (8%)</span>
-                <span className="font-medium">MVR {((space?.basePriceMVR || 0) * 0.08).toLocaleString()}</span>
+                <span className="font-medium">Rf. {((space?.basePriceMVR || 0) * 0.08).toLocaleString()}</span>
               </div>
               <Separator />
               <div className="flex justify-between text-lg">
                 <span className="font-medium text-foreground">Total</span>
                 <span className="font-serif text-gold">
-                  MVR {((space?.basePriceMVR || 0) * 1.08).toLocaleString()}
+                  Rf. {((space?.basePriceMVR || 0) * 1.08).toLocaleString()}
                 </span>
               </div>
             </div>

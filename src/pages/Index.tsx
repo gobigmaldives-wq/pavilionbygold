@@ -138,7 +138,7 @@ const Index = () => {
                     Up to {space.capacity} guests
                   </span>
                   <span className="text-gold font-semibold">
-                    From MVR {space.basePriceMVR.toLocaleString()}
+                    From Rf. {space.basePriceMVR.toLocaleString()}
                   </span>
                 </div>
               </div>
