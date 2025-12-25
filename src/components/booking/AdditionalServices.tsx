@@ -17,9 +17,9 @@ interface AdditionalServicesProps {
 }
 
 const DECOR_PACKAGES = [
-  { id: "basic", name: "Basic Decor", description: "Essential venue styling" },
-  { id: "elegant", name: "Elegant Decor", description: "Premium floral arrangements & lighting" },
-  { id: "luxury", name: "Luxury Decor", description: "Full venue transformation" },
+  { id: "classic", name: "Classic", description: "Essential venue styling" },
+  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting" },
+  { id: "premium", name: "Premium", description: "Full venue transformation" },
 ];
 
 const AV_PACKAGES = [
