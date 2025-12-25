@@ -44,15 +44,11 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-cream/70">
                 <MapPin size={18} className="text-gold flex-shrink-0 mt-0.5" />
-                <span>123 Pavilion Drive, Downtown District</span>
+                <span>West Beach Pavilion, Rasfannu, Boduthakurufaanu Magu, Male</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-cream/70">
                 <Phone size={18} className="text-gold flex-shrink-0" />
-                <span>+1 (555) 123-4567</span>
-              </li>
-              <li className="flex items-center gap-3 text-sm text-cream/70">
-                <Mail size={18} className="text-gold flex-shrink-0" />
-                <span>events@pavilionbygold.com</span>
+                <span>+(960) 7979766</span>
               </li>
             </ul>
           </div>
@@ -61,11 +57,11 @@ const Footer = () => {
           <div>
             <h4 className="font-serif text-lg text-gold mb-4">Hours</h4>
             <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-sm text-cream/70">
-                <Clock size={18} className="text-gold flex-shrink-0" />
+              <li className="flex items-start gap-3 text-sm text-cream/70">
+                <Clock size={18} className="text-gold flex-shrink-0 mt-0.5" />
                 <div>
-                  <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
-                  <p>Sat - Sun: By Appointment</p>
+                  <p>Saturday - Thursday: 12:00 PM - 23:00 PM</p>
+                  <p>Friday: 14:00 PM - 23:00 PM</p>
                 </div>
               </li>
             </ul>
