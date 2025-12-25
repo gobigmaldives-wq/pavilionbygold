@@ -420,44 +420,136 @@ const BookingForm = () => {
               <DialogTitle className="font-serif text-2xl">Pavilion by Gold Rules & Regulations</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 text-sm text-muted-foreground">
+              <p className="text-xs italic">(Applicable to All Clients & Events)</p>
+              
               <section>
                 <h3 className="font-semibold text-foreground mb-2">1. Booking & Confirmation</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>All bookings are subject to availability and confirmation by management.</li>
-                  <li>A deposit is required to secure your booking.</li>
-                  <li>Full payment must be made at least 7 days before the event date.</li>
+                  <li>A booking is considered tentatively reserved only upon submission of the booking request form.</li>
+                  <li>A booking is confirmed only after written approval by venue management and receipt of the required advance payment / retainer.</li>
+                  <li>The venue reserves the right to decline or cancel any booking that does not comply with venue policies, safety standards, or payment timelines.</li>
                 </ul>
               </section>
+              
               <section>
-                <h3 className="font-semibold text-foreground mb-2">2. Cancellation Policy</h3>
+                <h3 className="font-semibold text-foreground mb-2">2. Venue Areas & Floor Usage</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Cancellations made 30+ days before the event: Full refund minus processing fee.</li>
-                  <li>Cancellations made 14-29 days before: 50% refund.</li>
-                  <li>Cancellations made less than 14 days before: No refund.</li>
+                  <li>The venue consists of multiple floors/areas which may be booked individually or collectively, subject to availability.</li>
+                  <li>On days where different clients are booked on different floors, guests must strictly remain within their allocated floor/area.</li>
+                  <li>Clients are responsible for ensuring their guests comply with this rule to avoid confusion or disruption.</li>
                 </ul>
               </section>
+              
               <section>
-                <h3 className="font-semibold text-foreground mb-2">3. Venue Usage</h3>
+                <h3 className="font-semibold text-foreground mb-2">3. Guest Count & Capacity</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>The venue must be vacated by the agreed end time.</li>
-                  <li>No alterations to the venue structure without prior approval.</li>
-                  <li>All decorations must be approved and removed after the event.</li>
+                  <li>Each floor has a maximum seating and standing capacity.</li>
+                  <li>Guest count must be finalized and communicated at least 72 hours prior to the event.</li>
+                  <li>The venue reserves the right to restrict entry or charge additional fees if the guest count exceeds the agreed number.</li>
+                  <li>Exceeding capacity is strictly prohibited due to safety and regulatory requirements.</li>
                 </ul>
               </section>
+              
               <section>
-                <h3 className="font-semibold text-foreground mb-2">4. Conduct & Safety</h3>
+                <h3 className="font-semibold text-foreground mb-2">4. Event Timings</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>The client is responsible for the behavior of all guests.</li>
-                  <li>Smoking is only permitted in designated areas.</li>
-                  <li>Fire safety regulations must be strictly followed.</li>
+                  <li>Event setup, event time, and dismantling times must strictly follow the approved time slots.</li>
+                  <li>Overtime usage is subject to availability and additional charges.</li>
+                  <li>Any delay caused by the client or their vendors may result in reduced event time without refund.</li>
                 </ul>
               </section>
+              
               <section>
-                <h3 className="font-semibold text-foreground mb-2">5. Damages & Liability</h3>
+                <h3 className="font-semibold text-foreground mb-2">5. Payments & Financial Terms</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>The client is liable for any damages caused during the event.</li>
-                  <li>A security deposit may be required for certain events.</li>
-                  <li>Pavilion by Gold is not responsible for personal belongings.</li>
+                  <li>All payments must be made as per the agreed payment schedule.</li>
+                  <li>Failure to meet payment deadlines may result in automatic cancellation of the booking.</li>
+                  <li>Security deposits (if applicable) will be refunded after the event, subject to damage assessment.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">6. Cancellation & Rescheduling</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Cancellations must be made in writing.</li>
+                  <li>Cancellation charges apply based on notice period (to be specified in the invoice/proposal).</li>
+                  <li>Rescheduling is subject to availability and may incur additional costs.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">7. Approved Vendors & Services</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>The venue works with designated / contracted partners for catering services, decoration services, and audio-visual & technical services.</li>
+                  <li>Only approved vendors are allowed to operate within the venue.</li>
+                  <li>Any external vendor must receive prior written approval from venue management.</li>
+                  <li>Unauthorized vendors will not be permitted entry.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">8. Decoration & Installations</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>All décor setups must be approved in advance.</li>
+                  <li>No drilling, permanent fixing, nailing, or structural alterations are allowed.</li>
+                  <li>Confetti, glitter, smoke effects, or hazardous materials are prohibited unless approved.</li>
+                  <li>Any damage caused during installation or dismantling will be charged to the client.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">9. Food & Beverage Policy</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Outside food and beverages are not permitted unless approved in writing.</li>
+                  <li>All food handling must comply with hygiene and safety regulations.</li>
+                  <li>Alcohol service (if applicable) must follow local laws and venue policies.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">10. Safety & Security</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Clients must comply with all fire, safety, and emergency regulations.</li>
+                  <li>Blocking exits, stairways, or emergency access points is strictly prohibited.</li>
+                  <li>The venue is not responsible for loss or damage of personal belongings.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">11. Damages & Liability</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>The client is fully responsible for any damage caused by guests, vendors, or contractors.</li>
+                  <li>Repair or replacement costs will be deducted from the security deposit or billed separately.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">12. Noise & Conduct</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Music and sound levels must comply with venue guidelines and local regulations.</li>
+                  <li>Any form of illegal, disruptive, or unsafe behavior may result in immediate event termination without refund.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">13. Force Majeure</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>The venue shall not be held liable for cancellations or delays caused by events beyond its control, including but not limited to natural disasters, government restrictions, or emergencies.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">14. Management Rights</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Venue management reserves the right to refuse entry, stop any activity, or terminate the event if venue rules are violated or safety is compromised.</li>
+                </ul>
+              </section>
+              
+              <section>
+                <h3 className="font-semibold text-foreground mb-2">15. Acceptance of Terms</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>By confirming a booking, the client acknowledges and agrees to all rules and regulations stated above.</li>
+                  <li>These rules form an integral part of the booking agreement and invoice.</li>
                 </ul>
               </section>
             </div>
