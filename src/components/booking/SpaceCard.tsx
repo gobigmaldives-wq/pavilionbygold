@@ -7,9 +7,10 @@ interface SpaceCardProps {
   selected: boolean;
   onSelect: () => void;
   disabled?: boolean;
+  currency: "rf" | "usd";
 }
 
-const SpaceCard = ({ space, selected, onSelect, disabled }: SpaceCardProps) => {
+const SpaceCard = ({ space, selected, onSelect, disabled, currency }: SpaceCardProps) => {
   return (
     <button
       type="button"
@@ -41,7 +42,9 @@ const SpaceCard = ({ space, selected, onSelect, disabled }: SpaceCardProps) => {
           <span className="text-sm">Up to {space.capacity} guests</span>
         </div>
         <div className="text-gold font-semibold">
-          Rf. {space.basePriceMVR.toLocaleString()}
+          {currency === "rf" 
+            ? `Rf. ${space.basePriceMVR.toLocaleString()}` 
+            : `$${space.basePriceUSD.toLocaleString()}`}
         </div>
       </div>
     </button>
