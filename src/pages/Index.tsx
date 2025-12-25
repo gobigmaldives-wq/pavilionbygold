@@ -4,7 +4,7 @@ import { ArrowRight, Calendar, Users, Sparkles } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { SPACES } from "@/types/booking";
-import heroImage from "@/assets/hero-venue.jpg";
+import heroImage from "@/assets/space-floor2.jpg";
 
 const Index = () => {
   return (
