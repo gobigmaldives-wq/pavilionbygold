@@ -8,6 +8,7 @@ import BookingPage from "./pages/BookingPage";
 import BookingSuccess from "./pages/BookingSuccess";
 import SpacesPage from "./pages/SpacesPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminAuth from "./pages/admin/AdminAuth";
 import AdminBookings from "./pages/admin/AdminBookings";
 import AdminInvoices from "./pages/admin/AdminInvoices";
 import AdminPayments from "./pages/admin/AdminPayments";
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/book" element={<BookingPage />} />
           <Route path="/booking-success" element={<BookingSuccess />} />
           <Route path="/spaces" element={<SpacesPage />} />
+          <Route path="/admin/login" element={<AdminAuth />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/bookings" element={<AdminBookings />} />
           <Route path="/admin/invoices" element={<AdminInvoices />} />
