@@ -384,7 +384,7 @@ const BookingForm = () => {
             selections={serviceSelections}
             onSelectionChange={setServiceSelections}
             guestCount={form.watch("guestCount") || 0}
-            selectedSpace={selectedSpaces.length > 0 ? (selectedSpaces.includes("entire_venue") ? "entire_venue" : selectedSpaces[0]) : null}
+            selectedSpaces={selectedSpaces}
           />
 
           <FormField
