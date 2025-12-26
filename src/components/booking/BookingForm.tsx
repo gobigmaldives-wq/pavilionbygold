@@ -53,7 +53,7 @@ const bookingSchema = z.object({
   companyName: z.string().max(100).optional(),
   eventType: z.enum(["wedding", "corporate", "private", "ramadan", "other"]),
   eventDate: z.date({ required_error: "Event date is required" }),
-  space: z.enum(["floor1", "floor1_garden", "floor2", "entire_venue"]),
+  spaces: z.array(z.enum(["floor1", "floor1_garden", "floor2", "entire_venue"])).min(1, "Please select at least one space"),
   guestCount: z.number().min(1, "Guest count is required").max(1000),
   notes: z.string().max(1000).optional(),
   agreedToRules: z.boolean().refine((val) => val === true, {
@@ -66,7 +66,7 @@ type BookingFormData = z.infer<typeof bookingSchema>;
 const BookingForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedSpace, setSelectedSpace] = useState<SpaceType | null>(null);
+  const [selectedSpaces, setSelectedSpaces] = useState<SpaceType[]>([]);
   const [rulesDialogOpen, setRulesDialogOpen] = useState(false);
   const [spaceCurrency, setSpaceCurrency] = useState<"rf" | "usd">("rf");
   const [serviceSelections, setServiceSelections] = useState<ServiceSelections>({
@@ -86,13 +86,54 @@ const BookingForm = () => {
       companyName: "",
       notes: "",
       agreedToRules: false,
+      spaces: [],
     },
   });
+
+  const handleSpaceSelect = (spaceId: SpaceType, fieldOnChange: (value: SpaceType[]) => void) => {
+    let newSelection: SpaceType[];
+    
+    if (spaceId === "entire_venue") {
+      // If selecting entire venue, clear all others and select only entire venue
+      newSelection = ["entire_venue"];
+    } else {
+      // If selecting individual floor
+      if (selectedSpaces.includes("entire_venue")) {
+        // If entire venue was selected, replace with just this floor
+        newSelection = [spaceId];
+      } else if (selectedSpaces.includes(spaceId)) {
+        // If already selected, deselect it
+        newSelection = selectedSpaces.filter(s => s !== spaceId);
+      } else {
+        // Add to selection
+        newSelection = [...selectedSpaces, spaceId];
+      }
+    }
+    
+    setSelectedSpaces(newSelection);
+    fieldOnChange(newSelection);
+  };
+
+  // Determine the space value for database storage
+  const getSpaceForStorage = (spaces: SpaceType[]): "floor1" | "floor1_garden" | "floor2" | "entire_venue" => {
+    if (spaces.includes("entire_venue")) return "entire_venue";
+    // If all 3 floors are selected, treat as entire venue
+    if (spaces.length === 3 && spaces.includes("floor1") && spaces.includes("floor1_garden") && spaces.includes("floor2")) {
+      return "entire_venue";
+    }
+    // Return the first selected space for now (we'll store additional in notes)
+    return spaces[0] || "floor1";
+  };
 
   const onSubmit = async (data: BookingFormData) => {
     setIsSubmitting(true);
     
     try {
+      const primarySpace = getSpaceForStorage(data.spaces);
+      const additionalSpacesNote = data.spaces.length > 1 && primarySpace !== "entire_venue" 
+        ? `Selected spaces: ${data.spaces.join(", ")}. ` 
+        : "";
+      
       const { error } = await supabase.from("bookings").insert({
         full_name: data.fullName,
         phone: data.phone,
@@ -100,9 +141,9 @@ const BookingForm = () => {
         company_name: data.companyName || null,
         event_type: data.eventType,
         event_date: format(data.eventDate, "yyyy-MM-dd"),
-        space: data.space,
+        space: primarySpace,
         guest_count: data.guestCount,
-        notes: data.notes || null,
+        notes: additionalSpacesNote + (data.notes || ""),
         agreed_to_rules: data.agreedToRules,
         agreed_at: new Date().toISOString(),
       });
@@ -253,8 +294,8 @@ const BookingForm = () => {
                         disabled={(date) => {
                           // Block past dates
                           if (date < new Date(new Date().setHours(0, 0, 0, 0))) return true;
-                          // Block dates that are already booked for the selected space
-                          return isDateBlockedForSpace(date, selectedSpace, bookedDates);
+                          // Block dates that are already booked for any selected space
+                          return selectedSpaces.some(space => isDateBlockedForSpace(date, space, bookedDates));
                         }}
                         initialFocus
                         className={cn("p-3 pointer-events-auto")}
@@ -290,7 +331,7 @@ const BookingForm = () => {
           <div className="mb-6">
             <FormField
               control={form.control}
-              name="space"
+              name="spaces"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
@@ -316,18 +357,18 @@ const BookingForm = () => {
                       </Button>
                     </div>
                   </div>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    You can select multiple spaces. Selecting "Entire Venue" will include all areas.
+                  </p>
                   <FormControl>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       {SPACES.map((space) => (
                         <SpaceCard
                           key={space.id}
                           space={space}
-                          selected={selectedSpace === space.id}
+                          selected={selectedSpaces.includes(space.id)}
                           currency={spaceCurrency}
-                          onSelect={() => {
-                            setSelectedSpace(space.id);
-                            field.onChange(space.id);
-                          }}
+                          onSelect={() => handleSpaceSelect(space.id, field.onChange)}
                         />
                       ))}
                     </div>
@@ -343,7 +384,7 @@ const BookingForm = () => {
             selections={serviceSelections}
             onSelectionChange={setServiceSelections}
             guestCount={form.watch("guestCount") || 0}
-            selectedSpace={selectedSpace}
+            selectedSpace={selectedSpaces.length > 0 ? (selectedSpaces.includes("entire_venue") ? "entire_venue" : selectedSpaces[0]) : null}
           />
 
           <FormField
