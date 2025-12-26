@@ -150,6 +150,33 @@ const BookingForm = () => {
 
       if (error) throw error;
 
+      // Send email notifications
+      try {
+        const notificationResponse = await supabase.functions.invoke("send-booking-notification", {
+          body: {
+            fullName: data.fullName,
+            email: data.email,
+            phone: data.phone,
+            companyName: data.companyName,
+            eventType: data.eventType,
+            eventDate: format(data.eventDate, "MMMM d, yyyy"),
+            space: primarySpace,
+            guestCount: data.guestCount,
+            notes: additionalSpacesNote + (data.notes || ""),
+            adminEmail: "admin@pavilionbygold.com", // Replace with your actual admin email
+          },
+        });
+        
+        if (notificationResponse.error) {
+          console.error("Email notification error:", notificationResponse.error);
+        } else {
+          console.log("Email notifications sent successfully");
+        }
+      } catch (emailError) {
+        console.error("Failed to send email notifications:", emailError);
+        // Don't fail the booking if email fails
+      }
+
       toast.success("Booking request submitted successfully!", {
         description: "We'll contact you shortly to confirm your reservation.",
       });
