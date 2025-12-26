@@ -18,7 +18,7 @@ interface AdditionalServicesProps {
   selections: ServiceSelections;
   onSelectionChange: (selections: ServiceSelections) => void;
   guestCount: number;
-  selectedSpace: SpaceType | null;
+  selectedSpaces: SpaceType[];
 }
 
 const DECOR_PACKAGES = [
@@ -43,7 +43,7 @@ const VENUE_UPGRADES = {
   washroomAttendant: { priceRf: 2000, priceUsd: 130 },
 };
 
-const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpace }: AdditionalServicesProps) => {
+const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
 
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
@@ -58,14 +58,14 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     let totalRf = 0;
     let totalUsd = 0;
 
-    // Add space price
-    if (selectedSpace) {
-      const space = SPACES.find(s => s.id === selectedSpace);
+    // Add all selected spaces' prices
+    selectedSpaces.forEach(spaceId => {
+      const space = SPACES.find(s => s.id === spaceId);
       if (space) {
         totalRf += space.basePriceMVR;
         totalUsd += space.basePriceUSD;
       }
-    }
+    });
 
     if (selections.washroomAttendant) {
       totalRf += VENUE_UPGRADES.washroomAttendant.priceRf;
@@ -100,7 +100,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   };
 
   const { totalRf, totalUsd } = calculateTotal();
-  const hasSelections = selectedSpace || selections.washroomAttendant || selections.decorPackage || selections.avPackage || selections.cateringPackage;
+  const hasSelections = selectedSpaces.length > 0 || selections.washroomAttendant || selections.decorPackage || selections.avPackage || selections.cateringPackage;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 md:p-8">
