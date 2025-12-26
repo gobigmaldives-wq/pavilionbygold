@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { format, isSameDay } from "date-fns";
-import { Calendar as CalendarIcon, List, Filter, Plus } from "lucide-react";
+import { Calendar as CalendarIcon, List, Filter, Plus, Loader2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,79 +17,72 @@ import BookingList from "@/components/admin/BookingList";
 import BookingDetailModal from "@/components/admin/BookingDetailModal";
 import { BookingRequest, SPACES, BookingStatus } from "@/types/booking";
 import { toast } from "sonner";
-
-// Mock data for demonstration
-const mockBookings: BookingRequest[] = [
-  {
-    id: "1",
-    fullName: "Sarah Johnson",
-    phone: "+1 555-123-4567",
-    email: "sarah.j@email.com",
-    companyName: "Johnson Events",
-    eventType: "wedding",
-    eventDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    space: "entire_venue",
-    guestCount: 350,
-    notes: "Looking for full wedding package with outdoor ceremony.",
-    agreedToRules: true,
-    agreedAt: new Date().toISOString(),
-    status: "pending",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    fullName: "Michael Chen",
-    phone: "+1 555-987-6543",
-    email: "m.chen@company.com",
-    companyName: "Tech Corp",
-    eventType: "corporate",
-    eventDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-    space: "floor1",
-    guestCount: 150,
-    notes: "Annual company gala, need AV setup.",
-    agreedToRules: true,
-    agreedAt: new Date().toISOString(),
-    status: "approved",
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: "3",
-    fullName: "Amira Hassan",
-    phone: "+1 555-456-7890",
-    email: "amira.h@gmail.com",
-    eventType: "ramadan",
-    eventDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
-    space: "floor2",
-    guestCount: 120,
-    agreedToRules: true,
-    agreedAt: new Date().toISOString(),
-    status: "confirmed",
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: "4",
-    fullName: "David Miller",
-    phone: "+1 555-321-0987",
-    email: "david.m@email.com",
-    eventType: "private",
-    eventDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-    space: "floor1_garden",
-    guestCount: 80,
-    notes: "Birthday celebration, outdoor preferred.",
-    agreedToRules: true,
-    agreedAt: new Date().toISOString(),
-    status: "pending",
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 const AdminDashboard = () => {
-  const [bookings, setBookings] = useState<BookingRequest[]>(mockBookings);
+  const navigate = useNavigate();
+  const { user, isAdmin, loading: authLoading, signOut } = useAuth();
+  const [bookings, setBookings] = useState<BookingRequest[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedBooking, setSelectedBooking] = useState<BookingRequest | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<BookingStatus | "all">("all");
   const [spaceFilter, setSpaceFilter] = useState<string>("all");
+
+  // Redirect if not authenticated or not admin
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/admin/login');
+    } else if (!authLoading && user && !isAdmin) {
+      toast.error('Access denied', {
+        description: 'You do not have admin privileges.',
+      });
+      navigate('/admin/login');
+    }
+  }, [user, isAdmin, authLoading, navigate]);
+
+  // Fetch bookings from database
+  useEffect(() => {
+    if (user && isAdmin) {
+      fetchBookings();
+    }
+  }, [user, isAdmin]);
+
+  const fetchBookings = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      toast.error('Failed to load bookings', {
+        description: error.message,
+      });
+    } else if (data) {
+      // Map database fields to BookingRequest type
+      const mappedBookings: BookingRequest[] = data.map((booking) => ({
+        id: booking.id,
+        fullName: booking.full_name,
+        phone: booking.phone,
+        email: booking.email,
+        companyName: booking.company_name || undefined,
+        eventType: booking.event_type,
+        eventDate: booking.event_date,
+        space: booking.space,
+        guestCount: booking.guest_count,
+        notes: booking.notes || undefined,
+        agreedToRules: booking.agreed_to_rules,
+        agreedAt: booking.agreed_at || '',
+        status: booking.status,
+        createdAt: booking.created_at,
+      }));
+      setBookings(mappedBookings);
+    }
+    setLoading(false);
+  };
 
   const filteredBookings = bookings.filter((booking) => {
     const matchesStatus = statusFilter === "all" || booking.status === statusFilter;
@@ -102,28 +96,67 @@ const AdminDashboard = () => {
     setModalOpen(true);
   };
 
-  const handleApprove = (bookingId: string) => {
-    setBookings(prev => 
-      prev.map(b => b.id === bookingId ? { ...b, status: "approved" as BookingStatus } : b)
-    );
-    setModalOpen(false);
-    toast.success("Booking approved!", {
-      description: "Invoice has been sent to the client.",
-    });
+  const handleApprove = async (bookingId: string) => {
+    const { error } = await supabase
+      .from('bookings')
+      .update({ status: 'approved' })
+      .eq('id', bookingId);
+
+    if (error) {
+      toast.error('Failed to approve booking', {
+        description: error.message,
+      });
+    } else {
+      setBookings(prev => 
+        prev.map(b => b.id === bookingId ? { ...b, status: "approved" as BookingStatus } : b)
+      );
+      setModalOpen(false);
+      toast.success("Booking approved!", {
+        description: "Invoice will be sent to the client.",
+      });
+    }
   };
 
-  const handleReject = (bookingId: string) => {
-    setBookings(prev => 
-      prev.map(b => b.id === bookingId ? { ...b, status: "rejected" as BookingStatus } : b)
-    );
-    setModalOpen(false);
-    toast.info("Booking rejected", {
-      description: "The client has been notified.",
-    });
+  const handleReject = async (bookingId: string) => {
+    const { error } = await supabase
+      .from('bookings')
+      .update({ status: 'rejected' })
+      .eq('id', bookingId);
+
+    if (error) {
+      toast.error('Failed to reject booking', {
+        description: error.message,
+      });
+    } else {
+      setBookings(prev => 
+        prev.map(b => b.id === bookingId ? { ...b, status: "rejected" as BookingStatus } : b)
+      );
+      setModalOpen(false);
+      toast.info("Booking rejected", {
+        description: "The client has been notified.",
+      });
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/admin/login');
   };
 
   const pendingCount = bookings.filter(b => b.status === "pending").length;
   const confirmedCount = bookings.filter(b => b.status === "confirmed").length;
+
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-gold" />
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -137,10 +170,16 @@ const AdminDashboard = () => {
             <p className="text-muted-foreground">Manage venue bookings and events</p>
           </div>
           
-          <Button className="bg-gold-gradient text-primary-foreground hover:opacity-90">
-            <Plus className="h-4 w-4 mr-2" />
-            New Booking
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button className="bg-gold-gradient text-primary-foreground hover:opacity-90">
+              <Plus className="h-4 w-4 mr-2" />
+              New Booking
+            </Button>
+            <Button variant="outline" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -159,7 +198,7 @@ const AdminDashboard = () => {
           </div>
           <div className="bg-card border border-border rounded-xl p-6">
             <p className="text-sm text-muted-foreground mb-1">This Month Revenue</p>
-            <p className="text-3xl font-serif text-foreground">$24,500</p>
+            <p className="text-3xl font-serif text-foreground">$0</p>
           </div>
         </div>
 
