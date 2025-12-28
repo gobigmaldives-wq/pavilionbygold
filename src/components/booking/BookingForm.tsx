@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
@@ -90,6 +90,10 @@ const BookingForm = () => {
       spaces: [],
     },
   });
+
+  // Use useWatch to avoid infinite re-renders with Radix Select
+  const watchedEventDate = useWatch({ control: form.control, name: "eventDate" });
+  const watchedGuestCount = useWatch({ control: form.control, name: "guestCount" });
 
   const handleSpaceSelect = (spaceId: SpaceType, fieldOnChange: (value: SpaceType[]) => void) => {
     let newSelection: SpaceType[];
@@ -390,13 +394,13 @@ const BookingForm = () => {
                   </p>
                   <FormControl>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      {getSpacesForDate(form.watch("eventDate")).map((space) => (
+                      {getSpacesForDate(watchedEventDate).map((space) => (
                         <SpaceCard
                           key={space.id}
                           space={space}
                           selected={selectedSpaces.includes(space.id)}
                           currency={spaceCurrency}
-                          eventDate={form.watch("eventDate")}
+                          eventDate={watchedEventDate}
                           onSelect={() => handleSpaceSelect(space.id, field.onChange)}
                         />
                       ))}
@@ -412,7 +416,7 @@ const BookingForm = () => {
           <AdditionalServices
             selections={serviceSelections}
             onSelectionChange={setServiceSelections}
-            guestCount={form.watch("guestCount") || 0}
+            guestCount={watchedGuestCount || 0}
             selectedSpaces={selectedSpaces}
           />
 
