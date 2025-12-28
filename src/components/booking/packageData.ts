@@ -158,13 +158,85 @@ export const AV_PACKAGE_DETAILS: PackageDetail[] = [
   },
 ];
 
-export const CATERING_PACKAGE_DETAILS: PackageDetail[] = [
+// Canope/Short Eats pricing
+export const CATERING_CANOPE_DETAILS: PackageDetail[] = [
   {
     id: "silver",
     name: "Silver Package",
-    description: "Classic menu selection per person",
-    priceRf: 160,
-    priceUsd: 9,
+    description: "Classic canapé selection per person",
+    priceRf: 190,
+    priceUsd: 12,
+    includes: [
+      "Welcome drinks",
+      "4 canapé varieties",
+      "2 short eats options",
+      "Mini desserts",
+      "Soft drinks & water",
+      "Professional service staff",
+      "Table setup & cleanup",
+    ],
+    weddings: [
+      { name: "Asif & Jameela", date: "January 2025", guestCount: 100 },
+      { name: "Naeem & Firasha", date: "December 2024", guestCount: 80 },
+      { name: "Sameer & Nadha", date: "November 2024", guestCount: 90 },
+    ],
+  },
+  {
+    id: "gold",
+    name: "Gold Package",
+    description: "Enhanced canapé with premium options per person",
+    priceRf: 220,
+    priceUsd: 14,
+    includes: [
+      "Welcome drinks & mocktails",
+      "6 canapé varieties",
+      "4 short eats options",
+      "Live canapé station",
+      "Assorted mini desserts",
+      "Fresh juices",
+      "Dedicated service team",
+      "Premium presentation",
+    ],
+    weddings: [
+      { name: "Waheed & Suma", date: "February 2025", guestCount: 130 },
+      { name: "Rafeeq & Latheefa", date: "January 2025", guestCount: 110 },
+      { name: "Nasheed & Azeema", date: "December 2024", guestCount: 145 },
+    ],
+  },
+  {
+    id: "platinum",
+    name: "Platinum Package",
+    description: "Luxury canapé experience per person",
+    priceRf: 300,
+    priceUsd: 19,
+    includes: [
+      "Premium welcome reception",
+      "8 gourmet canapé varieties",
+      "6 short eats options",
+      "Multiple live stations",
+      "Seafood canapés",
+      "International selection",
+      "Gourmet mini desserts",
+      "Premium beverages",
+      "VIP service team",
+      "Custom presentation",
+    ],
+    weddings: [
+      { name: "Faiz & Shiuna", date: "March 2025", guestCount: 200 },
+      { name: "Hameed & Rizna", date: "February 2025", guestCount: 170 },
+      { name: "Tharik & Minha", date: "January 2025", guestCount: 190 },
+    ],
+  },
+];
+
+// Dinner pricing
+export const CATERING_DINNER_DETAILS: PackageDetail[] = [
+  {
+    id: "silver",
+    name: "Silver Package",
+    description: "Classic dinner menu per person",
+    priceRf: 220,
+    priceUsd: 14,
     includes: [
       "Welcome drinks",
       "3 appetizer options",
@@ -184,9 +256,9 @@ export const CATERING_PACKAGE_DETAILS: PackageDetail[] = [
   {
     id: "gold",
     name: "Gold Package",
-    description: "Enhanced menu with premium options per person",
-    priceRf: 190,
-    priceUsd: 12.5,
+    description: "Enhanced dinner with premium options per person",
+    priceRf: 250,
+    priceUsd: 16,
     includes: [
       "Welcome drinks & canapés",
       "5 appetizer options",
@@ -208,9 +280,9 @@ export const CATERING_PACKAGE_DETAILS: PackageDetail[] = [
   {
     id: "platinum",
     name: "Platinum Package",
-    description: "Luxury dining experience per person",
-    priceRf: 230,
-    priceUsd: 15,
+    description: "Luxury dinner experience per person",
+    priceRf: 320,
+    priceUsd: 21,
     includes: [
       "Champagne welcome reception",
       "7 premium appetizers",
@@ -232,6 +304,9 @@ export const CATERING_PACKAGE_DETAILS: PackageDetail[] = [
     ],
   },
 ];
+
+// Keep for backward compatibility - defaults to dinner
+export const CATERING_PACKAGE_DETAILS = CATERING_DINNER_DETAILS;
 
 // Helper to get package details by ID
 export const getPackageDetails = (
