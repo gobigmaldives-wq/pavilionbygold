@@ -434,14 +434,14 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       )}
 
       {/* Package Detail Dialog */}
-      {currentPackageData && dialogOpen.type && (
-        <PackageDetailDialog
-          open={!!currentPackageData}
-          onOpenChange={closePackageDialog}
-          packageType={dialogOpen.type}
-          packageData={currentPackageData}
-        />
-      )}
+      <PackageDetailDialog
+        open={dialogOpen.type !== null && dialogOpen.packageId !== null}
+        onOpenChange={(open) => {
+          if (!open) closePackageDialog();
+        }}
+        packageType={dialogOpen.type || "decor"}
+        packageData={currentPackageData || DECOR_PACKAGE_DETAILS[0]}
+      />
     </div>
   );
 };
