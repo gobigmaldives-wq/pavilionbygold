@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -22,6 +23,18 @@ interface BookingNotificationRequest {
   adminEmail: string;
 }
 
+// HTML escape function to prevent XSS in emails
+function escapeHtml(unsafe: string | undefined | null): string {
+  if (!unsafe) return '';
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+    .replace(/\//g, "&#x2F;");
+}
+
 const formatEventType = (type: string): string => {
   const types: Record<string, string> = {
     wedding: "Wedding",
@@ -30,7 +43,7 @@ const formatEventType = (type: string): string => {
     ramadan: "Ramadan Event",
     other: "Other",
   };
-  return types[type] || type;
+  return types[type] || escapeHtml(type);
 };
 
 const formatSpace = (space: string): string => {
@@ -40,7 +53,7 @@ const formatSpace = (space: string): string => {
     floor2: "Floor 2 - Skyview Terrace",
     entire_venue: "Entire Venue",
   };
-  return spaces[space] || space;
+  return spaces[space] || escapeHtml(space);
 };
 
 const handler = async (req: Request): Promise<Response> => {
@@ -51,13 +64,89 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const booking: BookingNotificationRequest = await req.json();
-    console.log("Received booking notification request:", booking);
+    console.log("Received booking notification request for:", booking.email);
+
+    // Validate required fields
+    if (!booking.email || !booking.eventDate || !booking.fullName) {
+      return new Response(
+        JSON.stringify({ error: "Missing required booking fields" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Verify the booking exists in the database before sending emails
+    // This prevents abuse of the endpoint by requiring a matching booking record
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error("Missing Supabase configuration");
+      return new Response(
+        JSON.stringify({ error: "Server configuration error" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    
+    // Check if a booking was recently created with matching email and date
+    // This validates that the request came from a legitimate booking submission
+    const { data: existingBooking, error: lookupError } = await supabase
+      .from('bookings')
+      .select('id, email, event_date, full_name, created_at')
+      .eq('email', booking.email)
+      .eq('full_name', booking.fullName)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (lookupError || !existingBooking) {
+      console.error("Booking verification failed:", lookupError?.message);
+      return new Response(
+        JSON.stringify({ error: "Invalid booking reference" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Verify the booking was created within the last 5 minutes to prevent replay attacks
+    const bookingCreatedAt = new Date(existingBooking.created_at);
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    
+    if (bookingCreatedAt < fiveMinutesAgo) {
+      console.error("Booking too old for notification:", existingBooking.id);
+      return new Response(
+        JSON.stringify({ error: "Booking notification window expired" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log("Verified booking:", existingBooking.id);
+
+    // Escape all user-provided content for HTML email
+    const safeFullName = escapeHtml(booking.fullName);
+    const safeEmail = escapeHtml(booking.email);
+    const safePhone = escapeHtml(booking.phone);
+    const safeCompanyName = escapeHtml(booking.companyName);
+    const safeNotes = escapeHtml(booking.notes);
+    const safeGuestCount = Number(booking.guestCount) || 0;
 
     // Send notification email to admin
     const adminEmailResponse = await resend.emails.send({
       from: "Pavilion by Gold <onboarding@resend.dev>",
       to: [booking.adminEmail],
-      subject: `🎉 New Booking Request: ${booking.fullName} - ${formatEventType(booking.eventType)}`,
+      subject: `🎉 New Booking Request: ${safeFullName} - ${formatEventType(booking.eventType)}`,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #D4AF37, #F4E4A0); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
@@ -69,20 +158,20 @@ const handler = async (req: Request): Promise<Response> => {
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Name:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold;">${booking.fullName}</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold;">${safeFullName}</td>
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Email:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="mailto:${booking.email}" style="color: #D4AF37;">${booking.email}</a></td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="mailto:${safeEmail}" style="color: #D4AF37;">${safeEmail}</a></td>
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Phone:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="tel:${booking.phone}" style="color: #D4AF37;">${booking.phone}</a></td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="tel:${safePhone}" style="color: #D4AF37;">${safePhone}</a></td>
               </tr>
-              ${booking.companyName ? `
+              ${safeCompanyName ? `
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Company:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${booking.companyName}</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${safeCompanyName}</td>
               </tr>
               ` : ''}
             </table>
@@ -95,7 +184,7 @@ const handler = async (req: Request): Promise<Response> => {
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Date:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold;">${booking.eventDate}</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold;">${escapeHtml(booking.eventDate)}</td>
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Space:</td>
@@ -103,12 +192,12 @@ const handler = async (req: Request): Promise<Response> => {
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Guests:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${booking.guestCount} people</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${safeGuestCount} people</td>
               </tr>
-              ${booking.notes ? `
+              ${safeNotes ? `
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Notes:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${booking.notes}</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${safeNotes}</td>
               </tr>
               ` : ''}
             </table>
@@ -139,7 +228,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 12px 12px;">
-            <p style="font-size: 16px; color: #333;">Dear ${booking.fullName},</p>
+            <p style="font-size: 16px; color: #333;">Dear ${safeFullName},</p>
             
             <p style="color: #666; line-height: 1.6;">
               Thank you for your interest in hosting your event at Pavilion by Gold. We have received your booking request and our team will review it shortly.
@@ -153,7 +242,7 @@ const handler = async (req: Request): Promise<Response> => {
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Date:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold;">${booking.eventDate}</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold;">${escapeHtml(booking.eventDate)}</td>
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Space:</td>
@@ -161,7 +250,7 @@ const handler = async (req: Request): Promise<Response> => {
               </tr>
               <tr>
                 <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">Guests:</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${booking.guestCount} people</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${safeGuestCount} people</td>
               </tr>
             </table>
 
@@ -208,7 +297,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-booking-notification:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Failed to send notification" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
