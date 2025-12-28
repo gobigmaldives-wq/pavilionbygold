@@ -75,6 +75,7 @@ export interface Receipt {
   createdAt: string;
 }
 
+// Pre-opening rates (valid until March 31, 2026)
 export const SPACES: Space[] = [
   {
     id: 'floor1',
@@ -109,6 +110,57 @@ export const SPACES: Space[] = [
     description: 'Complete venue access including all floors and garden',
   },
 ];
+
+// Regular rates (after March 31, 2026)
+export const SPACES_REGULAR: Space[] = [
+  {
+    id: 'floor1',
+    name: 'Floor 1',
+    capacity: 140,
+    basePriceMVR: 20000,
+    basePriceUSD: 1300,
+    description: 'Elegant main floor with marble finishes and crystal chandeliers',
+  },
+  {
+    id: 'floor1_garden',
+    name: 'Floor 1 Outdoor Garden',
+    capacity: 60,
+    basePriceMVR: 12000,
+    basePriceUSD: 780,
+    description: 'Beautiful outdoor garden space with natural ambiance',
+  },
+  {
+    id: 'floor2',
+    name: 'Floor 2',
+    capacity: 160,
+    basePriceMVR: 25000,
+    basePriceUSD: 1620,
+    description: 'Upper level with panoramic views and intimate setting',
+  },
+  {
+    id: 'entire_venue',
+    name: 'Entire Venue',
+    capacity: 360,
+    basePriceMVR: 55000,
+    basePriceUSD: 3570,
+    description: 'Complete venue access including all floors and garden',
+  },
+];
+
+// Cutoff date for pre-opening rates
+export const PRE_OPENING_CUTOFF = new Date('2026-04-01');
+
+// Get the correct space pricing based on event date
+export const getSpacesForDate = (eventDate?: Date): Space[] => {
+  if (!eventDate) return SPACES; // Default to pre-opening rates
+  return eventDate >= PRE_OPENING_CUTOFF ? SPACES_REGULAR : SPACES;
+};
+
+// Get a specific space with correct pricing for a date
+export const getSpaceByIdForDate = (id: SpaceType, eventDate?: Date): Space | undefined => {
+  const spaces = getSpacesForDate(eventDate);
+  return spaces.find(space => space.id === id);
+};
 
 export const ADD_ONS: AddOn[] = [
   { id: 'av', name: 'AV Equipment', price: 800 },
