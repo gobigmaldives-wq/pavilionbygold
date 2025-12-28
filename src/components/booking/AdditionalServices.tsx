@@ -13,6 +13,8 @@ import {
   CATERING_PACKAGE_DETAILS,
   CATERING_CANOPE_DETAILS,
   CATERING_DINNER_DETAILS,
+  DECOR_PRICES_BY_EVENT,
+  AV_PRICES_BY_EVENT,
   getPackageDetails,
   PackageDetail,
 } from "./packageData";
@@ -30,6 +32,7 @@ interface AdditionalServicesProps {
   onSelectionChange: (selections: ServiceSelections) => void;
   guestCount: number;
   selectedSpaces: SpaceType[];
+  eventType: string;
 }
 
 const VENUE_UPGRADES = {
@@ -38,7 +41,7 @@ const VENUE_UPGRADES = {
 
 const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 
-const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces }: AdditionalServicesProps) => {
+const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
   const [cateringType, setCateringType] = useState<"canope" | "dinner">("dinner");
   const [dialogOpen, setDialogOpen] = useState<{
@@ -47,6 +50,20 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   }>({ type: null, packageId: null });
 
   const currentCateringPackages = cateringType === "canope" ? CATERING_CANOPE_DETAILS : CATERING_DINNER_DETAILS;
+  
+  // Get event-specific pricing
+  const decorPrices = DECOR_PRICES_BY_EVENT[eventType] || DECOR_PRICES_BY_EVENT.wedding;
+  const avPrices = AV_PRICES_BY_EVENT[eventType] || AV_PRICES_BY_EVENT.wedding;
+
+  const getDecorPrice = (pkgId: string) => {
+    const priceKey = pkgId as keyof typeof decorPrices;
+    return decorPrices[priceKey] || { rf: 0, usd: 0 };
+  };
+
+  const getAvPrice = (pkgId: string) => {
+    const priceKey = pkgId as keyof typeof avPrices;
+    return avPrices[priceKey] || { rf: 0, usd: 0 };
+  };
 
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
     const newSelections = { ...selections, [key]: value };
@@ -93,19 +110,15 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     }
 
     if (selections.decorPackage && !selections.bringOwnDecorAV) {
-      const pkg = DECOR_PACKAGE_DETAILS.find(p => p.id === selections.decorPackage);
-      if (pkg) {
-        totalRf += pkg.priceRf;
-        totalUsd += pkg.priceUsd;
-      }
+      const price = getDecorPrice(selections.decorPackage);
+      totalRf += price.rf;
+      totalUsd += price.usd;
     }
 
     if (selections.avPackage && !selections.bringOwnDecorAV) {
-      const pkg = AV_PACKAGE_DETAILS.find(p => p.id === selections.avPackage);
-      if (pkg) {
-        totalRf += pkg.priceRf;
-        totalUsd += pkg.priceUsd;
-      }
+      const price = getAvPrice(selections.avPackage);
+      totalRf += price.rf;
+      totalUsd += price.usd;
     }
 
     if (selections.cateringPackage) {
@@ -245,7 +258,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                         </button>
                       </div>
                       <span className="text-sm font-medium text-gold">
-                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                        {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
@@ -299,7 +312,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                         </button>
                       </div>
                       <span className="text-sm font-medium text-gold">
-                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                        {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
@@ -377,7 +390,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                         </button>
                       </div>
                       <span className="text-sm font-medium text-gold">
-                        {formatPrice(pkg.priceRf, pkg.priceUsd)}/pp
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
