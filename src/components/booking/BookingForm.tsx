@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/dialog";
 import SpaceCard from "./SpaceCard";
 import AdditionalServices, { ServiceSelections } from "./AdditionalServices";
-import { SPACES, EVENT_TYPES, SpaceType } from "@/types/booking";
+import { SPACES, EVENT_TYPES, SpaceType, getSpacesForDate } from "@/types/booking";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useBookedDates, isDateBlockedForSpace } from "@/hooks/useBookedDates";
@@ -389,12 +389,13 @@ const BookingForm = () => {
                   </p>
                   <FormControl>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      {SPACES.map((space) => (
+                      {getSpacesForDate(form.watch("eventDate")).map((space) => (
                         <SpaceCard
                           key={space.id}
                           space={space}
                           selected={selectedSpaces.includes(space.id)}
                           currency={spaceCurrency}
+                          eventDate={form.watch("eventDate")}
                           onSelect={() => handleSpaceSelect(space.id, field.onChange)}
                         />
                       ))}

@@ -1,5 +1,5 @@
-import { Space } from "@/types/booking";
-import { Users, Check } from "lucide-react";
+import { Space, PRE_OPENING_CUTOFF } from "@/types/booking";
+import { Users, Check, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SpaceCardProps {
@@ -8,9 +8,11 @@ interface SpaceCardProps {
   onSelect: () => void;
   disabled?: boolean;
   currency: "rf" | "usd";
+  eventDate?: Date;
 }
 
-const SpaceCard = ({ space, selected, onSelect, disabled, currency }: SpaceCardProps) => {
+const SpaceCard = ({ space, selected, onSelect, disabled, currency, eventDate }: SpaceCardProps) => {
+  const isPreOpeningRate = !eventDate || eventDate < PRE_OPENING_CUTOFF;
   return (
     <button
       type="button"
@@ -41,10 +43,18 @@ const SpaceCard = ({ space, selected, onSelect, disabled, currency }: SpaceCardP
           <Users size={16} />
           <span className="text-sm">Up to {space.capacity} guests</span>
         </div>
-        <div className="text-gold font-semibold">
-          {currency === "rf" 
-            ? `Rf. ${space.basePriceMVR.toLocaleString()}` 
-            : `$${space.basePriceUSD.toLocaleString()}`}
+        <div className="text-right">
+          <div className="text-gold font-semibold">
+            {currency === "rf" 
+              ? `Rf. ${space.basePriceMVR.toLocaleString()}` 
+              : `$${space.basePriceUSD.toLocaleString()}`}
+          </div>
+          {isPreOpeningRate && (
+            <div className="flex items-center gap-1 text-xs text-emerald-600 mt-1">
+              <Tag size={10} />
+              <span>Pre-opening rate</span>
+            </div>
+          )}
         </div>
       </div>
     </button>
