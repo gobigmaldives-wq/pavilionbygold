@@ -16,6 +16,24 @@ export interface PackageDetail {
   weddings: WeddingExample[];
 }
 
+// Event-type-specific Decor pricing
+export const DECOR_PRICES_BY_EVENT: Record<string, { classic: { rf: number; usd: number }; standard: { rf: number; usd: number }; premium: { rf: number; usd: number } }> = {
+  wedding: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
+  corporate: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
+  private: { classic: { rf: 10000, usd: 650 }, standard: { rf: 25000, usd: 1620 }, premium: { rf: 50000, usd: 3240 } },
+  ramadan: { classic: { rf: 10000, usd: 650 }, standard: { rf: 25000, usd: 1620 }, premium: { rf: 50000, usd: 3240 } },
+  other: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
+};
+
+// Event-type-specific AV pricing
+export const AV_PRICES_BY_EVENT: Record<string, { basic: { rf: number; usd: number }; standard: { rf: number; usd: number }; premium: { rf: number; usd: number } }> = {
+  wedding: { basic: { rf: 5000, usd: 325 }, standard: { rf: 15000, usd: 975 }, premium: { rf: 50000, usd: 3245 } },
+  corporate: { basic: { rf: 25000, usd: 1620 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 80000, usd: 5190 } },
+  private: { basic: { rf: 5000, usd: 325 }, standard: { rf: 15000, usd: 975 }, premium: { rf: 25000, usd: 1620 } },
+  ramadan: { basic: { rf: 5000, usd: 325 }, standard: { rf: 15000, usd: 975 }, premium: { rf: 25000, usd: 1620 } },
+  other: { basic: { rf: 5000, usd: 325 }, standard: { rf: 15000, usd: 975 }, premium: { rf: 50000, usd: 3245 } },
+};
+
 export const DECOR_PACKAGE_DETAILS: PackageDetail[] = [
   {
     id: "classic",
