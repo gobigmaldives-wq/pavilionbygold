@@ -58,8 +58,9 @@ const AdminDashboard = () => {
       .order('created_at', { ascending: false });
 
     if (error) {
+      console.error('Failed to load bookings:', error);
       toast.error('Failed to load bookings', {
-        description: error.message,
+        description: 'An error occurred. Please try again.',
       });
     } else if (data) {
       // Map database fields to BookingRequest type
@@ -103,8 +104,9 @@ const AdminDashboard = () => {
       .eq('id', bookingId);
 
     if (error) {
+      console.error('Failed to approve booking:', error);
       toast.error('Failed to approve booking', {
-        description: error.message,
+        description: 'An error occurred. Please try again.',
       });
     } else {
       setBookings(prev => 
@@ -124,8 +126,9 @@ const AdminDashboard = () => {
       .eq('id', bookingId);
 
     if (error) {
+      console.error('Failed to reject booking:', error);
       toast.error('Failed to reject booking', {
-        description: error.message,
+        description: 'An error occurred. Please try again.',
       });
     } else {
       setBookings(prev => 
