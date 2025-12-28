@@ -3,15 +3,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Palette, Volume2, UtensilsCrossed } from "lucide-react";
+import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { SPACES, SpaceType } from "@/types/booking";
+import PackageDetailDialog from "./PackageDetailDialog";
+import {
+  DECOR_PACKAGE_DETAILS,
+  AV_PACKAGE_DETAILS,
+  CATERING_PACKAGE_DETAILS,
+  getPackageDetails,
+  PackageDetail,
+} from "./packageData";
 
 export interface ServiceSelections {
   washroomAttendant: boolean;
   decorPackage: string | null;
   avPackage: string | null;
   cateringPackage: string | null;
+  bringOwnDecorAV: boolean;
 }
 
 interface AdditionalServicesProps {
@@ -21,33 +30,34 @@ interface AdditionalServicesProps {
   selectedSpaces: SpaceType[];
 }
 
-const DECOR_PACKAGES = [
-  { id: "classic", name: "Classic", description: "Essential venue styling", priceRf: 20000, priceUsd: 1300 },
-  { id: "standard", name: "Standard", description: "Premium floral arrangements & lighting", priceRf: 50000, priceUsd: 3240 },
-  { id: "premium", name: "Premium", description: "Full venue transformation", priceRf: 100000, priceUsd: 6485 },
-];
-
-const AV_PACKAGES = [
-  { id: "basic", name: "Basic AV", description: "Microphone & speakers", priceRf: 15000, priceUsd: 975 },
-  { id: "standard", name: "Standard AV", description: "Full sound system & projector", priceRf: 30000, priceUsd: 1950 },
-  { id: "premium", name: "Premium AV", description: "Professional setup with lighting", priceRf: 50000, priceUsd: 3245 },
-];
-
-const CATERING_PACKAGES = [
-  { id: "silver", name: "Silver Package", description: "Per person", priceRf: 160, priceUsd: 9 },
-  { id: "gold", name: "Gold Package", description: "Per person", priceRf: 190, priceUsd: 12.5 },
-  { id: "platinum", name: "Platinum Package", description: "Per person", priceRf: 230, priceUsd: 15 },
-];
-
 const VENUE_UPGRADES = {
   washroomAttendant: { priceRf: 2000, priceUsd: 130 },
 };
 
+const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
+
 const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
+  const [dialogOpen, setDialogOpen] = useState<{
+    type: "decor" | "av" | "catering" | null;
+    packageId: string | null;
+  }>({ type: null, packageId: null });
 
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
-    onSelectionChange({ ...selections, [key]: value });
+    const newSelections = { ...selections, [key]: value };
+    
+    // If "bring your own" is selected, clear decor and AV packages
+    if (key === "bringOwnDecorAV" && value === true) {
+      newSelections.decorPackage = null;
+      newSelections.avPackage = null;
+    }
+    
+    // If selecting a decor or AV package, turn off "bring your own"
+    if ((key === "decorPackage" || key === "avPackage") && value !== null) {
+      newSelections.bringOwnDecorAV = false;
+    }
+    
+    onSelectionChange(newSelections);
   };
 
   const formatPrice = (priceRf: number, priceUsd: number) => {
@@ -72,16 +82,21 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       totalUsd += VENUE_UPGRADES.washroomAttendant.priceUsd;
     }
 
-    if (selections.decorPackage) {
-      const pkg = DECOR_PACKAGES.find(p => p.id === selections.decorPackage);
+    if (selections.bringOwnDecorAV) {
+      totalRf += BRING_OWN_FEE.priceRf;
+      totalUsd += BRING_OWN_FEE.priceUsd;
+    }
+
+    if (selections.decorPackage && !selections.bringOwnDecorAV) {
+      const pkg = DECOR_PACKAGE_DETAILS.find(p => p.id === selections.decorPackage);
       if (pkg) {
         totalRf += pkg.priceRf;
         totalUsd += pkg.priceUsd;
       }
     }
 
-    if (selections.avPackage) {
-      const pkg = AV_PACKAGES.find(p => p.id === selections.avPackage);
+    if (selections.avPackage && !selections.bringOwnDecorAV) {
+      const pkg = AV_PACKAGE_DETAILS.find(p => p.id === selections.avPackage);
       if (pkg) {
         totalRf += pkg.priceRf;
         totalUsd += pkg.priceUsd;
@@ -89,7 +104,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     }
 
     if (selections.cateringPackage) {
-      const pkg = CATERING_PACKAGES.find(p => p.id === selections.cateringPackage);
+      const pkg = CATERING_PACKAGE_DETAILS.find(p => p.id === selections.cateringPackage);
       if (pkg) {
         totalRf += pkg.priceRf * guestCount;
         totalUsd += pkg.priceUsd * guestCount;
@@ -99,8 +114,23 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     return { totalRf, totalUsd };
   };
 
+  const openPackageDialog = (type: "decor" | "av" | "catering", packageId: string) => {
+    setDialogOpen({ type, packageId });
+  };
+
+  const closePackageDialog = () => {
+    setDialogOpen({ type: null, packageId: null });
+  };
+
+  const currentPackageData = dialogOpen.type && dialogOpen.packageId
+    ? getPackageDetails(dialogOpen.type, dialogOpen.packageId)
+    : null;
+
   const { totalRf, totalUsd } = calculateTotal();
-  const hasSelections = selectedSpaces.length > 0 || selections.washroomAttendant || selections.decorPackage || selections.avPackage || selections.cateringPackage;
+  const hasSelections = selectedSpaces.length > 0 || selections.washroomAttendant || selections.decorPackage || selections.avPackage || selections.cateringPackage || selections.bringOwnDecorAV;
+
+  // Check if decor OR AV requirement is met
+  const hasDecorOrAV = selections.decorPackage || selections.avPackage || selections.bringOwnDecorAV;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 md:p-8">
@@ -127,7 +157,18 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
           </Button>
         </div>
       </div>
-      <p className="text-muted-foreground text-sm mb-6">Enhance your event with our premium add-ons (Optional)</p>
+      <p className="text-muted-foreground text-sm mb-4">Enhance your event with our premium add-ons</p>
+
+      {/* Mandatory requirement notice */}
+      <div className="mb-6 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg flex items-start gap-2">
+        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+        <div className="text-sm">
+          <p className="font-medium text-amber-800 dark:text-amber-200">Service Requirement</p>
+          <p className="text-amber-700 dark:text-amber-300">
+            Either a Decor or AV package is mandatory. Catering is exclusively by our partnered caterer.
+          </p>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Washroom Attendant */}
@@ -163,7 +204,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
         </Card>
 
         {/* Decor */}
-        <Card className="border-border hover:border-gold/50 transition-colors">
+        <Card className={`border-border hover:border-gold/50 transition-colors ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gold/10 rounded-lg">
@@ -179,15 +220,25 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             <RadioGroup
               value={selections.decorPackage || ""}
               onValueChange={(value) => updateSelection("decorPackage", value || null)}
+              disabled={selections.bringOwnDecorAV}
             >
-              {DECOR_PACKAGES.map((pkg) => (
+              {DECOR_PACKAGE_DETAILS.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
-                  <RadioGroupItem value={pkg.id} id={`decor-${pkg.id}`} />
+                  <RadioGroupItem value={pkg.id} id={`decor-${pkg.id}`} disabled={selections.bringOwnDecorAV} />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor={`decor-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                        {pkg.name}
-                      </Label>
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor={`decor-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                          {pkg.name}
+                        </Label>
+                        <button
+                          type="button"
+                          onClick={() => openPackageDialog("decor", pkg.id)}
+                          className="text-muted-foreground hover:text-gold transition-colors"
+                        >
+                          <Info className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                       <span className="text-sm font-medium text-gold">
                         {formatPrice(pkg.priceRf, pkg.priceUsd)}
                       </span>
@@ -196,19 +247,21 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   </div>
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={() => updateSelection("decorPackage", null)}
-                className="text-xs text-muted-foreground hover:text-foreground mt-1"
-              >
-                Clear selection
-              </button>
+              {!selections.bringOwnDecorAV && selections.decorPackage && (
+                <button
+                  type="button"
+                  onClick={() => updateSelection("decorPackage", null)}
+                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
+                >
+                  Clear selection
+                </button>
+              )}
             </RadioGroup>
           </CardContent>
         </Card>
 
         {/* AV */}
-        <Card className="border-border hover:border-gold/50 transition-colors">
+        <Card className={`border-border hover:border-gold/50 transition-colors ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gold/10 rounded-lg">
@@ -221,15 +274,25 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             <RadioGroup
               value={selections.avPackage || ""}
               onValueChange={(value) => updateSelection("avPackage", value || null)}
+              disabled={selections.bringOwnDecorAV}
             >
-              {AV_PACKAGES.map((pkg) => (
+              {AV_PACKAGE_DETAILS.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
-                  <RadioGroupItem value={pkg.id} id={`av-${pkg.id}`} />
+                  <RadioGroupItem value={pkg.id} id={`av-${pkg.id}`} disabled={selections.bringOwnDecorAV} />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor={`av-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                        {pkg.name}
-                      </Label>
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor={`av-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                          {pkg.name}
+                        </Label>
+                        <button
+                          type="button"
+                          onClick={() => openPackageDialog("av", pkg.id)}
+                          className="text-muted-foreground hover:text-gold transition-colors"
+                        >
+                          <Info className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                       <span className="text-sm font-medium text-gold">
                         {formatPrice(pkg.priceRf, pkg.priceUsd)}
                       </span>
@@ -238,13 +301,15 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   </div>
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={() => updateSelection("avPackage", null)}
-                className="text-xs text-muted-foreground hover:text-foreground mt-1"
-              >
-                Clear selection
-              </button>
+              {!selections.bringOwnDecorAV && selections.avPackage && (
+                <button
+                  type="button"
+                  onClick={() => updateSelection("avPackage", null)}
+                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
+                >
+                  Clear selection
+                </button>
+              )}
             </RadioGroup>
           </CardContent>
         </Card>
@@ -258,7 +323,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               </div>
               <div>
                 <CardTitle className="text-base font-medium">Catering</CardTitle>
-                <p className="text-xs text-muted-foreground">Gold Catering (in-house)</p>
+                <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
               </div>
             </div>
           </CardHeader>
@@ -267,14 +332,23 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               value={selections.cateringPackage || ""}
               onValueChange={(value) => updateSelection("cateringPackage", value || null)}
             >
-              {CATERING_PACKAGES.map((pkg) => (
+              {CATERING_PACKAGE_DETAILS.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
                   <RadioGroupItem value={pkg.id} id={`catering-${pkg.id}`} />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor={`catering-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                        {pkg.name}
-                      </Label>
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor={`catering-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                          {pkg.name}
+                        </Label>
+                        <button
+                          type="button"
+                          onClick={() => openPackageDialog("catering", pkg.id)}
+                          className="text-muted-foreground hover:text-gold transition-colors"
+                        >
+                          <Info className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                       <span className="text-sm font-medium text-gold">
                         {formatPrice(pkg.priceRf, pkg.priceUsd)}
                       </span>
@@ -283,17 +357,69 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   </div>
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={() => updateSelection("cateringPackage", null)}
-                className="text-xs text-muted-foreground hover:text-foreground mt-1"
-              >
-                Clear selection
-              </button>
+              {selections.cateringPackage && (
+                <button
+                  type="button"
+                  onClick={() => updateSelection("cateringPackage", null)}
+                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
+                >
+                  Clear selection
+                </button>
+              )}
             </RadioGroup>
           </CardContent>
         </Card>
       </div>
+
+      {/* Bring Your Own Decorator/AV Banner */}
+      <div className="mt-6">
+        <div 
+          className={`relative overflow-hidden rounded-xl border-2 transition-all cursor-pointer ${
+            selections.bringOwnDecorAV 
+              ? 'border-gold bg-gold/10' 
+              : 'border-border bg-gradient-to-r from-muted/50 to-muted hover:border-gold/50'
+          }`}
+          onClick={() => updateSelection("bringOwnDecorAV", !selections.bringOwnDecorAV)}
+        >
+          <div className="flex items-center justify-between p-4 md:p-6">
+            <div className="flex items-center gap-4">
+              <Checkbox
+                id="bringOwnDecorAV"
+                checked={selections.bringOwnDecorAV}
+                onCheckedChange={(checked) => updateSelection("bringOwnDecorAV", checked as boolean)}
+                className="h-5 w-5"
+              />
+              <div>
+                <h3 className="font-semibold text-foreground">Bring Your Own Decorator or AV Services</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Prefer to work with your own decorator or AV team? A venue coordination fee applies.
+                </p>
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <p className="text-lg font-bold text-gold">
+                {formatPrice(BRING_OWN_FEE.priceRf, BRING_OWN_FEE.priceUsd)}
+              </p>
+              <p className="text-xs text-muted-foreground">Coordination fee</p>
+            </div>
+          </div>
+          {selections.bringOwnDecorAV && (
+            <div className="bg-gold/20 px-4 py-2 text-sm text-foreground">
+              <span className="font-medium">Note:</span> This option replaces in-house Decor & AV packages. Catering remains exclusive to our partner.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Validation message */}
+      {!hasDecorOrAV && selectedSpaces.length > 0 && (
+        <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+          <p className="text-sm text-destructive">
+            Please select at least one Decor package, AV package, or choose to bring your own.
+          </p>
+        </div>
+      )}
 
       {/* Running Total */}
       {hasSelections && (
@@ -305,6 +431,16 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </span>
           </div>
         </div>
+      )}
+
+      {/* Package Detail Dialog */}
+      {currentPackageData && dialogOpen.type && (
+        <PackageDetailDialog
+          open={!!currentPackageData}
+          onOpenChange={closePackageDialog}
+          packageType={dialogOpen.type}
+          packageData={currentPackageData}
+        />
       )}
     </div>
   );

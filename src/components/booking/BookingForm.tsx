@@ -74,6 +74,7 @@ const BookingForm = () => {
     decorPackage: null,
     avPackage: null,
     cateringPackage: null,
+    bringOwnDecorAV: false,
   });
   const { data: bookedDates = [] } = useBookedDates();
 
