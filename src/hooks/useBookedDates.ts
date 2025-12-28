@@ -11,13 +11,11 @@ export const useBookedDates = () => {
   return useQuery({
     queryKey: ["booked-dates"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("bookings")
-        .select("event_date, space")
-        .in("status", ["approved", "confirmed", "completed"]);
+      // Use the secure RPC function that only returns anonymized data (no PII)
+      const { data, error } = await supabase.rpc("get_booked_dates");
 
       if (error) throw error;
-      return data as BookedDate[];
+      return (data || []) as BookedDate[];
     },
   });
 };

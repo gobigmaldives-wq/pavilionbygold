@@ -94,26 +94,17 @@ export type Database = {
       }
     }
     Views: {
-      booked_dates: {
-        Row: {
-          event_date: string | null
-          space: Database["public"]["Enums"]["space_type"] | null
-          status: Database["public"]["Enums"]["booking_status"] | null
-        }
-        Insert: {
-          event_date?: string | null
-          space?: Database["public"]["Enums"]["space_type"] | null
-          status?: Database["public"]["Enums"]["booking_status"] | null
-        }
-        Update: {
-          event_date?: string | null
-          space?: Database["public"]["Enums"]["space_type"] | null
-          status?: Database["public"]["Enums"]["booking_status"] | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_booked_dates: {
+        Args: never
+        Returns: {
+          event_date: string
+          space: string
+          status: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
