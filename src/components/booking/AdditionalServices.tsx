@@ -11,6 +11,8 @@ import {
   DECOR_PACKAGE_DETAILS,
   AV_PACKAGE_DETAILS,
   CATERING_PACKAGE_DETAILS,
+  CATERING_CANOPE_DETAILS,
+  CATERING_DINNER_DETAILS,
   getPackageDetails,
   PackageDetail,
 } from "./packageData";
@@ -38,10 +40,13 @@ const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 
 const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
+  const [cateringType, setCateringType] = useState<"canope" | "dinner">("dinner");
   const [dialogOpen, setDialogOpen] = useState<{
     type: "decor" | "av" | "catering" | null;
     packageId: string | null;
   }>({ type: null, packageId: null });
+
+  const currentCateringPackages = cateringType === "canope" ? CATERING_CANOPE_DETAILS : CATERING_DINNER_DETAILS;
 
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
     const newSelections = { ...selections, [key]: value };
@@ -104,7 +109,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     }
 
     if (selections.cateringPackage) {
-      const pkg = CATERING_PACKAGE_DETAILS.find(p => p.id === selections.cateringPackage);
+      const pkg = currentCateringPackages.find(p => p.id === selections.cateringPackage);
       if (pkg) {
         totalRf += pkg.priceRf * guestCount;
         totalUsd += pkg.priceUsd * guestCount;
@@ -317,13 +322,35 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
         {/* Catering */}
         <Card className="border-border hover:border-gold/50 transition-colors">
           <CardHeader className="pb-3">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gold/10 rounded-lg">
-                <UtensilsCrossed className="h-5 w-5 text-gold" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gold/10 rounded-lg">
+                  <UtensilsCrossed className="h-5 w-5 text-gold" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-medium">Catering</CardTitle>
+                  <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-base font-medium">Catering</CardTitle>
-                <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
+              <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                <Button
+                  type="button"
+                  variant={cateringType === "canope" ? "default" : "ghost"}
+                  size="sm"
+                  className="h-6 px-2 text-[10px]"
+                  onClick={() => setCateringType("canope")}
+                >
+                  Canopé
+                </Button>
+                <Button
+                  type="button"
+                  variant={cateringType === "dinner" ? "default" : "ghost"}
+                  size="sm"
+                  className="h-6 px-2 text-[10px]"
+                  onClick={() => setCateringType("dinner")}
+                >
+                  Dinner
+                </Button>
               </div>
             </div>
           </CardHeader>
@@ -332,13 +359,13 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               value={selections.cateringPackage || ""}
               onValueChange={(value) => updateSelection("cateringPackage", value || null)}
             >
-              {CATERING_PACKAGE_DETAILS.map((pkg) => (
+              {currentCateringPackages.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
-                  <RadioGroupItem value={pkg.id} id={`catering-${pkg.id}`} />
+                  <RadioGroupItem value={pkg.id} id={`catering-${cateringType}-${pkg.id}`} />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Label htmlFor={`catering-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                        <Label htmlFor={`catering-${cateringType}-${pkg.id}`} className="text-sm font-medium cursor-pointer">
                           {pkg.name}
                         </Label>
                         <button
@@ -350,7 +377,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                         </button>
                       </div>
                       <span className="text-sm font-medium text-gold">
-                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}/pp
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
