@@ -119,7 +119,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   };
 
   const closePackageDialog = () => {
-    setDialogOpen({ type: null, packageId: null });
+    setDialogOpen((prev) => (prev.type === null && prev.packageId === null ? prev : { type: null, packageId: null }));
   };
 
   const currentPackageData = dialogOpen.type && dialogOpen.packageId
@@ -374,12 +374,11 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       {/* Bring Your Own Decorator/AV Banner */}
       <div className="mt-6">
         <div 
-          className={`relative overflow-hidden rounded-xl border-2 transition-all cursor-pointer ${
+          className={`relative overflow-hidden rounded-xl border-2 transition-all ${
             selections.bringOwnDecorAV 
               ? 'border-gold bg-gold/10' 
               : 'border-border bg-gradient-to-r from-muted/50 to-muted hover:border-gold/50'
           }`}
-          onClick={() => updateSelection("bringOwnDecorAV", !selections.bringOwnDecorAV)}
         >
           <div className="flex items-center justify-between p-4 md:p-6">
             <div className="flex items-center gap-4">
@@ -434,14 +433,16 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       )}
 
       {/* Package Detail Dialog */}
-      <PackageDetailDialog
-        open={dialogOpen.type !== null && dialogOpen.packageId !== null}
-        onOpenChange={(open) => {
-          if (!open) closePackageDialog();
-        }}
-        packageType={dialogOpen.type || "decor"}
-        packageData={currentPackageData || DECOR_PACKAGE_DETAILS[0]}
-      />
+      {currentPackageData && dialogOpen.type && (
+        <PackageDetailDialog
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) closePackageDialog();
+          }}
+          packageType={dialogOpen.type}
+          packageData={currentPackageData}
+        />
+      )}
     </div>
   );
 };
