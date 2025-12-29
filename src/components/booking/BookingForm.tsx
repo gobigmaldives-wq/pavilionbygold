@@ -70,7 +70,6 @@ const BookingForm = () => {
   const [rulesDialogOpen, setRulesDialogOpen] = useState(false);
   const [spaceCurrency, setSpaceCurrency] = useState<"rf" | "usd">("rf");
   const [serviceSelections, setServiceSelections] = useState<ServiceSelections>({
-    washroomAttendant: false,
     decorPackage: null,
     avPackage: null,
     cateringPackage: null,

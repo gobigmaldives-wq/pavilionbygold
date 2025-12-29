@@ -20,7 +20,6 @@ import {
 } from "./packageData";
 
 export interface ServiceSelections {
-  washroomAttendant: boolean;
   decorPackage: string | null;
   avPackage: string | null;
   cateringPackage: string | null;
@@ -34,10 +33,6 @@ interface AdditionalServicesProps {
   selectedSpaces: SpaceType[];
   eventType: string;
 }
-
-const VENUE_UPGRADES = {
-  washroomAttendant: { priceRf: 2000, priceUsd: 130 },
-};
 
 const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 
@@ -99,10 +94,6 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       }
     });
 
-    if (selections.washroomAttendant) {
-      totalRf += VENUE_UPGRADES.washroomAttendant.priceRf;
-      totalUsd += VENUE_UPGRADES.washroomAttendant.priceUsd;
-    }
 
     if (selections.bringOwnDecorAV) {
       totalRf += BRING_OWN_FEE.priceRf;
@@ -145,7 +136,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     : null;
 
   const { totalRf, totalUsd } = calculateTotal();
-  const hasSelections = selectedSpaces.length > 0 || selections.washroomAttendant || selections.decorPackage || selections.avPackage || selections.cateringPackage || selections.bringOwnDecorAV;
+  const hasSelections = selectedSpaces.length > 0 || selections.decorPackage || selections.avPackage || selections.cateringPackage || selections.bringOwnDecorAV;
 
   // Check if decor OR AV requirement is met
   const hasDecorOrAV = selections.decorPackage || selections.avPackage || selections.bringOwnDecorAV;
@@ -189,37 +180,6 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Washroom Attendant */}
-        <Card className="border-border hover:border-gold/50 transition-colors">
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gold/10 rounded-lg">
-                <Sparkles className="h-5 w-5 text-gold" />
-              </div>
-              <CardTitle className="text-base font-medium">Venue Upgrades</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="flex items-start space-x-3">
-              <Checkbox
-                id="washroomAttendant"
-                checked={selections.washroomAttendant}
-                onCheckedChange={(checked) => updateSelection("washroomAttendant", checked as boolean)}
-              />
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="washroomAttendant" className="text-sm font-medium cursor-pointer">
-                    Washroom Attendant
-                  </Label>
-                  <span className="text-sm font-medium text-gold">
-                    {formatPrice(VENUE_UPGRADES.washroomAttendant.priceRf, VENUE_UPGRADES.washroomAttendant.priceUsd)}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground">Professional attendant service</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Decor */}
         <Card className={`border-border hover:border-gold/50 transition-colors ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
