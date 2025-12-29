@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Users } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { SPACES, SpaceType } from "@/types/booking";
+import { SPACES_REGULAR, SpaceType } from "@/types/booking";
 import heroImage from "@/assets/hero-venue.jpg";
 import floor2Image from "@/assets/space-floor2.jpg";
 import entireVenueImage from "@/assets/space-entire-venue.jpg";
@@ -80,7 +80,7 @@ const SpacesPage = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
-            {SPACES.map((space, index) => (
+            {SPACES_REGULAR.map((space, index) => (
               <div 
                 key={space.id}
                 className="group bg-card border border-border rounded-2xl overflow-hidden hover:shadow-xl hover:border-gold/30 transition-all duration-300"
