@@ -20,7 +20,7 @@ export interface PackageDetail {
 export const DECOR_PRICES_BY_EVENT: Record<string, { classic: { rf: number; usd: number }; standard: { rf: number; usd: number }; premium: { rf: number; usd: number } }> = {
   wedding: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
   corporate: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
-  private: { classic: { rf: 10000, usd: 650 }, standard: { rf: 25000, usd: 1620 }, premium: { rf: 50000, usd: 3240 } },
+  private: { classic: { rf: 10000, usd: 650 }, standard: { rf: 20000, usd: 1300 }, premium: { rf: 40000, usd: 2600 } },
   ramadan: { classic: { rf: 10000, usd: 650 }, standard: { rf: 25000, usd: 1620 }, premium: { rf: 50000, usd: 3240 } },
   other: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
 };
@@ -34,7 +34,8 @@ export const AV_PRICES_BY_EVENT: Record<string, { basic: { rf: number; usd: numb
   other: { basic: { rf: 5000, usd: 325 }, standard: { rf: 15000, usd: 975 }, premium: { rf: 50000, usd: 3245 } },
 };
 
-export const DECOR_PACKAGE_DETAILS: PackageDetail[] = [
+// Wedding/Default Decor Package Details
+export const DECOR_PACKAGE_DETAILS_WEDDING: PackageDetail[] = [
   {
     id: "classic",
     name: "Classic",
@@ -109,6 +110,71 @@ export const DECOR_PACKAGE_DETAILS: PackageDetail[] = [
     ],
   },
 ];
+
+// Private Party Decor Package Details
+export const DECOR_PACKAGE_DETAILS_PRIVATE: PackageDetail[] = [
+  {
+    id: "classic",
+    name: "Classic",
+    description: "Essential venue styling for an elegant touch",
+    priceRf: 10000,
+    priceUsd: 650,
+    includes: [
+      "Backdrop panels with Balloon Pillar",
+      "1 Sunboard Cutout (2ft)",
+      "Welcome Signage",
+      "10 Balloon Centerpieces",
+    ],
+    weddings: [],
+  },
+  {
+    id: "standard",
+    name: "Standard",
+    description: "Premium floral arrangements & enhanced lighting",
+    priceRf: 20000,
+    priceUsd: 1300,
+    includes: [
+      "Backdrop Decoration with balloon pillar",
+      "2 Sunboard Cutouts (2ft)",
+      "Welcome Signage",
+      "Happy Birthday Sunboard cut",
+      "10 Centerpieces",
+      "1 Table for Cake",
+    ],
+    weddings: [],
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    description: "Full venue transformation with luxury touches",
+    priceRf: 40000,
+    priceUsd: 2600,
+    includes: [
+      "Backdrop Decoration with balloon pillar",
+      "4 Sunboard Cutouts (2ft)",
+      "Welcome Signage",
+      "Happy Birthday Sunboard cut",
+      "Table Centerpieces",
+      "Table for Cake",
+      "Ceiling Decoration",
+      "Jumping bounce house",
+      "Balloons on castle",
+    ],
+    weddings: [],
+  },
+];
+
+// Default Decor Package Details (for backward compatibility)
+export const DECOR_PACKAGE_DETAILS = DECOR_PACKAGE_DETAILS_WEDDING;
+
+// Event-specific Decor package details mapping
+export const DECOR_DETAILS_BY_EVENT: Record<string, PackageDetail[]> = {
+  wedding: DECOR_PACKAGE_DETAILS_WEDDING,
+  corporate: DECOR_PACKAGE_DETAILS_WEDDING,
+  private: DECOR_PACKAGE_DETAILS_PRIVATE,
+  ramadan: DECOR_PACKAGE_DETAILS_WEDDING,
+  other: DECOR_PACKAGE_DETAILS_WEDDING,
+};
 
 // Wedding AV Package Details
 export const AV_PACKAGE_DETAILS_WEDDING: PackageDetail[] = [
@@ -380,7 +446,8 @@ export const getPackageDetails = (
 ): PackageDetail | undefined => {
   switch (type) {
     case "decor":
-      return DECOR_PACKAGE_DETAILS.find((p) => p.id === id);
+      const decorDetails = eventType ? (DECOR_DETAILS_BY_EVENT[eventType] || DECOR_PACKAGE_DETAILS) : DECOR_PACKAGE_DETAILS;
+      return decorDetails.find((p) => p.id === id);
     case "av":
       const avDetails = eventType ? (AV_DETAILS_BY_EVENT[eventType] || AV_PACKAGE_DETAILS) : AV_PACKAGE_DETAILS;
       return avDetails.find((p) => p.id === id);
