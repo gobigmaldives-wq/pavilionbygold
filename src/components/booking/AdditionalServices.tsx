@@ -16,6 +16,7 @@ import {
   DECOR_PRICES_BY_EVENT,
   AV_PRICES_BY_EVENT,
   AV_DETAILS_BY_EVENT,
+  DECOR_DETAILS_BY_EVENT,
   getPackageDetails,
   PackageDetail,
 } from "./packageData";
@@ -51,6 +52,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   const decorPrices = DECOR_PRICES_BY_EVENT[eventType] || DECOR_PRICES_BY_EVENT.wedding;
   const avPrices = AV_PRICES_BY_EVENT[eventType] || AV_PRICES_BY_EVENT.wedding;
   const currentAvPackages = AV_DETAILS_BY_EVENT[eventType] || AV_PACKAGE_DETAILS;
+  const currentDecorPackages = DECOR_DETAILS_BY_EVENT[eventType] || DECOR_PACKAGE_DETAILS;
 
   const getDecorPrice = (pkgId: string) => {
     const priceKey = pkgId as keyof typeof decorPrices;
@@ -202,7 +204,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               onValueChange={(value) => updateSelection("decorPackage", value || null)}
               disabled={selections.bringOwnDecorAV}
             >
-              {DECOR_PACKAGE_DETAILS.map((pkg) => (
+              {currentDecorPackages.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
                   <RadioGroupItem value={pkg.id} id={`decor-${pkg.id}`} disabled={selections.bringOwnDecorAV} />
                   <div className="flex-1">
