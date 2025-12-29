@@ -21,7 +21,7 @@ export const DECOR_PRICES_BY_EVENT: Record<string, { classic: { rf: number; usd:
   wedding: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
   corporate: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
   private: { classic: { rf: 10000, usd: 650 }, standard: { rf: 20000, usd: 1300 }, premium: { rf: 40000, usd: 2600 } },
-  ramadan: { classic: { rf: 10000, usd: 650 }, standard: { rf: 25000, usd: 1620 }, premium: { rf: 50000, usd: 3240 } },
+  ramadan: { classic: { rf: 5000, usd: 325 }, standard: { rf: 10000, usd: 650 }, premium: { rf: 20000, usd: 1300 } },
   other: { classic: { rf: 20000, usd: 1300 }, standard: { rf: 50000, usd: 3240 }, premium: { rf: 100000, usd: 6485 } },
 };
 
@@ -164,6 +164,49 @@ export const DECOR_PACKAGE_DETAILS_PRIVATE: PackageDetail[] = [
   },
 ];
 
+// Ramadan Decor Package Details
+export const DECOR_PACKAGE_DETAILS_RAMADAN: PackageDetail[] = [
+  {
+    id: "classic",
+    name: "Classic",
+    description: "Essential Arabic styling for Ramadan gatherings",
+    priceRf: 5000,
+    priceUsd: 325,
+    includes: [
+      "Welcome Signage for Group",
+      "Ceiling Arabic hangers",
+    ],
+    weddings: [],
+  },
+  {
+    id: "standard",
+    name: "Standard",
+    description: "Enhanced Ramadan ambiance with centerpieces",
+    priceRf: 10000,
+    priceUsd: 650,
+    includes: [
+      "Welcome Signage for Group",
+      "Ceiling Arabic hangers",
+      "Table centerpieces",
+    ],
+    weddings: [],
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    description: "Full Ramadan transformation with photo corner",
+    priceRf: 20000,
+    priceUsd: 1300,
+    includes: [
+      "Welcome Signage for Group",
+      "Ceiling Arabic hangers",
+      "Table centerpieces",
+      "Photo corner with branding",
+    ],
+    weddings: [],
+  },
+];
+
 // Default Decor Package Details (for backward compatibility)
 export const DECOR_PACKAGE_DETAILS = DECOR_PACKAGE_DETAILS_WEDDING;
 
@@ -172,7 +215,7 @@ export const DECOR_DETAILS_BY_EVENT: Record<string, PackageDetail[]> = {
   wedding: DECOR_PACKAGE_DETAILS_WEDDING,
   corporate: DECOR_PACKAGE_DETAILS_WEDDING,
   private: DECOR_PACKAGE_DETAILS_PRIVATE,
-  ramadan: DECOR_PACKAGE_DETAILS_WEDDING,
+  ramadan: DECOR_PACKAGE_DETAILS_RAMADAN,
   other: DECOR_PACKAGE_DETAILS_WEDDING,
 };
 
