@@ -204,6 +204,7 @@ export const AV_PACKAGE_DETAILS_CORPORATE: PackageDetail[] = [
       "Lighting: 8 Beams, 20 Par lights, 10 City lights, 12 LED bar lights, 2 Warm blinders for front",
       "Sound: Line array 4 tops 2 subs with sound controller",
       "LED Screen (20x10ft) with LED controller",
+      "Red carpet walkway",
     ],
     weddings: [],
   },
