@@ -110,7 +110,8 @@ export const DECOR_PACKAGE_DETAILS: PackageDetail[] = [
   },
 ];
 
-export const AV_PACKAGE_DETAILS: PackageDetail[] = [
+// Wedding AV Package Details
+export const AV_PACKAGE_DETAILS_WEDDING: PackageDetail[] = [
   {
     id: "basic",
     name: "Basic AV",
@@ -162,6 +163,63 @@ export const AV_PACKAGE_DETAILS: PackageDetail[] = [
     ],
   },
 ];
+
+// Corporate AV Package Details
+export const AV_PACKAGE_DETAILS_CORPORATE: PackageDetail[] = [
+  {
+    id: "basic",
+    name: "Basic AV",
+    description: "Professional stage setup with sound system",
+    priceRf: 25000,
+    priceUsd: 1620,
+    includes: [
+      "Riser with black carpet (12x24ft)",
+      "Lighting: 4 Beams, 10 Par lights, 6 City lights, 8 LED bar lights, 1 Warm blinder for front",
+      "Sound: Line array 4 tops 2 subs",
+    ],
+    weddings: [],
+  },
+  {
+    id: "standard",
+    name: "Standard AV",
+    description: "Full stage setup with LED screen",
+    priceRf: 50000,
+    priceUsd: 3240,
+    includes: [
+      "Riser with black carpet (12x24ft)",
+      "Lighting: 4 Beams, 10 Par lights, 6 City lights, 8 LED bar lights, 1 Warm blinder for front",
+      "Sound: Line array 4 tops 2 subs with sound controller",
+      "LED Screen (12x08ft) with LED controller",
+    ],
+    weddings: [],
+  },
+  {
+    id: "premium",
+    name: "Premium AV",
+    description: "Premium stage setup with enhanced lighting & large LED screen",
+    priceRf: 80000,
+    priceUsd: 5190,
+    includes: [
+      "Riser with black carpet (12x24ft)",
+      "Lighting: 8 Beams, 20 Par lights, 10 City lights, 12 LED bar lights, 2 Warm blinders for front",
+      "Sound: Line array 4 tops 2 subs with sound controller",
+      "LED Screen (20x10ft) with LED controller",
+    ],
+    weddings: [],
+  },
+];
+
+// Default AV Package Details (for backward compatibility)
+export const AV_PACKAGE_DETAILS = AV_PACKAGE_DETAILS_WEDDING;
+
+// Event-specific AV package details mapping
+export const AV_DETAILS_BY_EVENT: Record<string, PackageDetail[]> = {
+  wedding: AV_PACKAGE_DETAILS_WEDDING,
+  corporate: AV_PACKAGE_DETAILS_CORPORATE,
+  private: AV_PACKAGE_DETAILS_WEDDING,
+  ramadan: AV_PACKAGE_DETAILS_WEDDING,
+  other: AV_PACKAGE_DETAILS_WEDDING,
+};
 
 // Canope/Short Eats pricing
 export const CATERING_CANOPE_DETAILS: PackageDetail[] = [
@@ -316,13 +374,15 @@ export const CATERING_PACKAGE_DETAILS = CATERING_DINNER_DETAILS;
 // Helper to get package details by ID
 export const getPackageDetails = (
   type: "decor" | "av" | "catering",
-  id: string
+  id: string,
+  eventType?: string
 ): PackageDetail | undefined => {
   switch (type) {
     case "decor":
       return DECOR_PACKAGE_DETAILS.find((p) => p.id === id);
     case "av":
-      return AV_PACKAGE_DETAILS.find((p) => p.id === id);
+      const avDetails = eventType ? (AV_DETAILS_BY_EVENT[eventType] || AV_PACKAGE_DETAILS) : AV_PACKAGE_DETAILS;
+      return avDetails.find((p) => p.id === id);
     case "catering":
       return CATERING_PACKAGE_DETAILS.find((p) => p.id === id);
   }
