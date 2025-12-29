@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Users, Sparkles } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { SPACES } from "@/types/booking";
+import { SPACES_REGULAR } from "@/types/booking";
 import heroImage from "@/assets/space-floor2.jpg";
 
 const Index = () => {
@@ -125,7 +125,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {SPACES.map((space, index) => (
+            {SPACES_REGULAR.map((space, index) => (
               <div 
                 key={space.id}
                 className="bg-card border border-border rounded-xl p-6 hover:shadow-lg hover:border-gold/30 transition-all duration-300"
