@@ -435,6 +435,69 @@ export const CATERING_DINNER_DETAILS: PackageDetail[] = [
   },
 ];
 
+// Ramadan Iftar Packages (per person pricing)
+export const CATERING_IFTAR_DETAILS: PackageDetail[] = [
+  {
+    id: "silver",
+    name: "Silver Iftar",
+    description: "Traditional Iftar spread per person",
+    priceRf: 180,
+    priceUsd: 12,
+    includes: [
+      "Dates & Arabic coffee",
+      "Fresh juices & water",
+      "3 soup varieties",
+      "Salad bar",
+      "Main course (2 proteins)",
+      "Rice & bread station",
+      "Traditional desserts",
+      "Professional service staff",
+    ],
+    weddings: [],
+  },
+  {
+    id: "gold",
+    name: "Gold Iftar",
+    description: "Premium Iftar experience per person",
+    priceRf: 250,
+    priceUsd: 16,
+    includes: [
+      "Premium dates & Arabic coffee",
+      "Fresh juices & mocktails",
+      "5 soup varieties",
+      "Gourmet salad bar",
+      "Main course (3 proteins)",
+      "Live cooking station",
+      "Rice varieties & fresh bread",
+      "Assorted Arabic sweets",
+      "Dedicated service team",
+    ],
+    weddings: [],
+  },
+  {
+    id: "platinum",
+    name: "Platinum Iftar",
+    description: "Luxury Iftar feast per person",
+    priceRf: 350,
+    priceUsd: 23,
+    includes: [
+      "Premium Medjool dates & Arabic coffee",
+      "Welcome drinks & fresh juices",
+      "Soup station with 7 varieties",
+      "International salad bar",
+      "Main course (4 proteins)",
+      "Multiple live cooking stations",
+      "Seafood display",
+      "Premium rice & bread station",
+      "Arabic sweet corner",
+      "Live dessert station",
+      "VIP service team",
+      "Custom menu printing",
+    ],
+    weddings: [],
+  },
+];
+
 // Keep for backward compatibility - defaults to dinner
 export const CATERING_PACKAGE_DETAILS = CATERING_DINNER_DETAILS;
 
