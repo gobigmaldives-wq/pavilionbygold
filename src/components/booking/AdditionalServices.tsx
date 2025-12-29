@@ -12,6 +12,7 @@ import {
   AV_PACKAGE_DETAILS,
   CATERING_PACKAGE_DETAILS,
   CATERING_CANOPE_DETAILS,
+  CATERING_IFTAR_DETAILS,
   CATERING_DINNER_DETAILS,
   DECOR_PRICES_BY_EVENT,
   AV_PRICES_BY_EVENT,
@@ -40,13 +41,17 @@ const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 
 const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
-  const [cateringType, setCateringType] = useState<"canope" | "dinner">("dinner");
+  const [cateringType, setCateringType] = useState<"canope" | "dinner" | "iftar">("dinner");
   const [dialogOpen, setDialogOpen] = useState<{
     type: "decor" | "av" | "catering" | null;
     packageId: string | null;
   }>({ type: null, packageId: null });
 
-  const currentCateringPackages = cateringType === "canope" ? CATERING_CANOPE_DETAILS : CATERING_DINNER_DETAILS;
+  // For Ramadan, use Iftar packages; otherwise use selected catering type
+  const isRamadan = eventType === "ramadan";
+  const currentCateringPackages = isRamadan 
+    ? CATERING_IFTAR_DETAILS 
+    : (cateringType === "canope" ? CATERING_CANOPE_DETAILS : CATERING_DINNER_DETAILS);
   
   // Get event-specific pricing and package details
   const decorPrices = DECOR_PRICES_BY_EVENT[eventType] || DECOR_PRICES_BY_EVENT.wedding;
@@ -305,30 +310,36 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   <UtensilsCrossed className="h-5 w-5 text-gold" />
                 </div>
                 <div>
-                  <CardTitle className="text-base font-medium">Catering</CardTitle>
-                  <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
+                  <CardTitle className="text-base font-medium">
+                    {isRamadan ? "Iftar Packages" : "Catering"}
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground">
+                    {isRamadan ? "Per person Iftar pricing" : "Gold Catering (exclusive partner)"}
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-                <Button
-                  type="button"
-                  variant={cateringType === "canope" ? "default" : "ghost"}
-                  size="sm"
-                  className="h-6 px-2 text-[10px]"
-                  onClick={() => setCateringType("canope")}
-                >
-                  Canopé
-                </Button>
-                <Button
-                  type="button"
-                  variant={cateringType === "dinner" ? "default" : "ghost"}
-                  size="sm"
-                  className="h-6 px-2 text-[10px]"
-                  onClick={() => setCateringType("dinner")}
-                >
-                  Dinner
-                </Button>
-              </div>
+              {!isRamadan && (
+                <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                  <Button
+                    type="button"
+                    variant={cateringType === "canope" ? "default" : "ghost"}
+                    size="sm"
+                    className="h-6 px-2 text-[10px]"
+                    onClick={() => setCateringType("canope")}
+                  >
+                    Canopé
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={cateringType === "dinner" ? "default" : "ghost"}
+                    size="sm"
+                    className="h-6 px-2 text-[10px]"
+                    onClick={() => setCateringType("dinner")}
+                  >
+                    Dinner
+                  </Button>
+                </div>
+              )}
             </div>
           </CardHeader>
           <CardContent className="pt-0">
