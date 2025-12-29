@@ -223,9 +223,9 @@ const BookingForm = () => {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number *</FormLabel>
+                  <FormLabel>Phone number for WhatsApp *</FormLabel>
                   <FormControl>
-                    <Input placeholder="+1 (555) 123-4567" {...field} />
+                    <Input placeholder="+960 123-456" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
