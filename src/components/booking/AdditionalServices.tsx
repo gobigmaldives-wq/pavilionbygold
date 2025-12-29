@@ -15,6 +15,7 @@ import {
   CATERING_DINNER_DETAILS,
   DECOR_PRICES_BY_EVENT,
   AV_PRICES_BY_EVENT,
+  AV_DETAILS_BY_EVENT,
   getPackageDetails,
   PackageDetail,
 } from "./packageData";
@@ -46,9 +47,10 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
 
   const currentCateringPackages = cateringType === "canope" ? CATERING_CANOPE_DETAILS : CATERING_DINNER_DETAILS;
   
-  // Get event-specific pricing
+  // Get event-specific pricing and package details
   const decorPrices = DECOR_PRICES_BY_EVENT[eventType] || DECOR_PRICES_BY_EVENT.wedding;
   const avPrices = AV_PRICES_BY_EVENT[eventType] || AV_PRICES_BY_EVENT.wedding;
+  const currentAvPackages = AV_DETAILS_BY_EVENT[eventType] || AV_PACKAGE_DETAILS;
 
   const getDecorPrice = (pkgId: string) => {
     const priceKey = pkgId as keyof typeof decorPrices;
@@ -132,7 +134,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   };
 
   const currentPackageData = dialogOpen.type && dialogOpen.packageId
-    ? getPackageDetails(dialogOpen.type, dialogOpen.packageId)
+    ? getPackageDetails(dialogOpen.type, dialogOpen.packageId, eventType)
     : null;
 
   const { totalRf, totalUsd } = calculateTotal();
@@ -254,7 +256,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               onValueChange={(value) => updateSelection("avPackage", value || null)}
               disabled={selections.bringOwnDecorAV}
             >
-              {AV_PACKAGE_DETAILS.map((pkg) => (
+              {currentAvPackages.map((pkg) => (
                 <div key={pkg.id} className="flex items-start space-x-3 py-1">
                   <RadioGroupItem value={pkg.id} id={`av-${pkg.id}`} disabled={selections.bringOwnDecorAV} />
                   <div className="flex-1">
