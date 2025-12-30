@@ -7,11 +7,12 @@ interface SpaceCardProps {
   selected: boolean;
   onSelect: () => void;
   disabled?: boolean;
+  disabledReason?: string;
   currency: "rf" | "usd";
   eventDate?: Date;
 }
 
-const SpaceCard = ({ space, selected, onSelect, disabled, currency, eventDate }: SpaceCardProps) => {
+const SpaceCard = ({ space, selected, onSelect, disabled, disabledReason, currency, eventDate }: SpaceCardProps) => {
   const isPreOpeningRate = !eventDate || eventDate < PRE_OPENING_CUTOFF;
   return (
     <button
@@ -37,6 +38,9 @@ const SpaceCard = ({ space, selected, onSelect, disabled, currency, eventDate }:
       <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
         {space.description}
       </p>
+      {disabled && disabledReason && (
+        <p className="text-xs text-amber-600 mb-3 italic">{disabledReason}</p>
+      )}
       
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-muted-foreground">
