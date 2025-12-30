@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon, Loader2, FileText, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -76,6 +76,18 @@ const BookingForm = () => {
     bringOwnDecorAV: false,
   });
   const { data: bookedDates = [] } = useBookedDates();
+  const spaceSelectionRef = useRef<HTMLDivElement>(null);
+
+  const handleGuestCountDone = () => {
+    // Blur the input to close mobile keyboard
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    // Smooth scroll to space selection
+    setTimeout(() => {
+      spaceSelectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
@@ -352,14 +364,25 @@ const BookingForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Number of Guests *</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Expected number of guests"
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                    />
-                  </FormControl>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        placeholder="Expected number of guests"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        className="flex-1"
+                      />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={handleGuestCountDone}
+                      className="shrink-0"
+                    >
+                      Done
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -367,7 +390,7 @@ const BookingForm = () => {
           </div>
 
           {/* Space Selection */}
-          <div className="mb-6">
+          <div className="mb-6" ref={spaceSelectionRef}>
             <FormField
               control={form.control}
               name="spaces"
@@ -468,21 +491,31 @@ const BookingForm = () => {
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel className="text-sm font-normal cursor-pointer">
-                    I accept the{" "}
-                    <button
-                      type="button"
-                      onClick={() => setRulesDialogOpen(true)}
-                      className="text-gold hover:underline"
-                    >
-                      Pavilion by Gold Rules & Regulations
-                    </button>{" "}
-                    and understand that this is a booking request pending confirmation.
+                    I accept the Pavilion by Gold Rules & Regulations and understand that this is a booking request pending confirmation.
                   </FormLabel>
                   <FormMessage />
                 </div>
               </FormItem>
             )}
           />
+
+          {/* Rules & Regulations Button */}
+          <button
+            type="button"
+            onClick={() => setRulesDialogOpen(true)}
+            className="w-full mb-6 p-4 rounded-lg border-2 border-dashed border-gold/40 bg-gold/5 hover:bg-gold/10 hover:border-gold/60 transition-all flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+                <FileText className="h-5 w-5 text-gold" />
+              </div>
+              <div className="text-left">
+                <p className="font-medium text-foreground">Rules & Regulations</p>
+                <p className="text-sm text-muted-foreground">Tap to read before submitting</p>
+              </div>
+            </div>
+            <ChevronRight className="h-5 w-5 text-gold group-hover:translate-x-1 transition-transform" />
+          </button>
 
           <Button 
             type="submit" 
