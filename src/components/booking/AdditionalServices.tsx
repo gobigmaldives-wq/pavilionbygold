@@ -523,7 +523,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               <div>
                 <h3 className="font-semibold text-foreground">Bring Your Own Decorator or AV Services</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Prefer to work with your own decorator or AV team? A venue coordination fee applies.
+                  <span className="font-medium text-foreground">External Vendor Coordination Fee:</span> If you prefer to use your own decorator or AV team, this fee covers venue coordination, access scheduling, power/utility arrangements, and on-site support during setup and event.
                 </p>
               </div>
             </div>
@@ -572,9 +572,10 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option1" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
               <RadioGroupItem value="option1" id="payOption1" className="mt-1" />
               <Label htmlFor="payOption1" className="flex-1 cursor-pointer">
-                <div className="font-medium text-foreground">Option 1</div>
+                <div className="font-medium text-foreground">Option 1 – Venue Only Deposit</div>
                 <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
-                  <li>• 100% Venue Charges</li>
+                  <li>• 100% Venue Charges now</li>
+                  <li className="text-amber-600 dark:text-amber-400">• Remaining services balance due 7 days before event</li>
                 </ul>
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option1").rf, calculatePaymentAmount("option1").usd)}
@@ -585,9 +586,10 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option2" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
               <RadioGroupItem value="option2" id="payOption2" className="mt-1" />
               <Label htmlFor="payOption2" className="flex-1 cursor-pointer">
-                <div className="font-medium text-foreground">Option 2</div>
+                <div className="font-medium text-foreground">Option 2 – 50% Deposit</div>
                 <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
-                  <li>• 50% of all selected services</li>
+                  <li>• 50% of all selected services now</li>
+                  <li className="text-amber-600 dark:text-amber-400">• Remaining 50% due 7 days before event</li>
                 </ul>
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option2").rf, calculatePaymentAmount("option2").usd)}
@@ -598,9 +600,10 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option3" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
               <RadioGroupItem value="option3" id="payOption3" className="mt-1" />
               <Label htmlFor="payOption3" className="flex-1 cursor-pointer">
-                <div className="font-medium text-foreground">Option 3 (Full Payment)</div>
+                <div className="font-medium text-foreground">Option 3 – Full Payment</div>
                 <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
-                  <li>• 100% of all selected services</li>
+                  <li>• 100% of all selected services now</li>
+                  <li className="text-green-600 dark:text-green-400">• No balance remaining</li>
                 </ul>
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option3").rf, calculatePaymentAmount("option3").usd)}
