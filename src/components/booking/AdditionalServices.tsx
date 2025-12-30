@@ -188,6 +188,64 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
         </div>
       </div>
 
+      {/* For Ramadan: Iftar full-width on top, then Decor/AV below */}
+      {isRamadan && (
+        <Card className="border-border hover:border-gold/50 transition-colors mb-4">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gold/10 rounded-lg">
+                <UtensilsCrossed className="h-5 w-5 text-gold" />
+              </div>
+              <div>
+                <CardTitle className="text-base font-medium">Iftar Packages</CardTitle>
+                <p className="text-xs text-muted-foreground">Per person Iftar pricing</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <RadioGroup
+              value={selections.cateringPackage || ""}
+              onValueChange={(value) => updateSelection("cateringPackage", value || null)}
+            >
+              {currentCateringPackages.map((pkg) => (
+                <div key={pkg.id} className="flex items-start space-x-3 py-1">
+                  <RadioGroupItem value={pkg.id} id={`catering-iftar-${pkg.id}`} />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor={`catering-iftar-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                          {pkg.name}
+                        </Label>
+                        <button
+                          type="button"
+                          onClick={() => openPackageDialog("catering", pkg.id)}
+                          className="text-muted-foreground hover:text-gold transition-colors"
+                        >
+                          <Info className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                      <span className="text-sm font-medium text-gold">
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{pkg.description}</p>
+                  </div>
+                </div>
+              ))}
+              {selections.cateringPackage && (
+                <button
+                  type="button"
+                  onClick={() => updateSelection("cateringPackage", null)}
+                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
+                >
+                  Clear selection
+                </button>
+              )}
+            </RadioGroup>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
         {/* Decor */}
@@ -301,24 +359,20 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
           </CardContent>
         </Card>
 
-        {/* Catering */}
-        <Card className="border-border hover:border-gold/50 transition-colors">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-gold/10 rounded-lg">
-                  <UtensilsCrossed className="h-5 w-5 text-gold" />
+        {/* Catering - only for non-Ramadan events */}
+        {!isRamadan && (
+          <Card className="border-border hover:border-gold/50 transition-colors">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-gold/10 rounded-lg">
+                    <UtensilsCrossed className="h-5 w-5 text-gold" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-base font-medium">Catering</CardTitle>
+                    <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-base font-medium">
-                    {isRamadan ? "Iftar Packages" : "Catering"}
-                  </CardTitle>
-                  <p className="text-xs text-muted-foreground">
-                    {isRamadan ? "Per person Iftar pricing" : "Gold Catering (exclusive partner)"}
-                  </p>
-                </div>
-              </div>
-              {!isRamadan && (
                 <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
                   <Button
                     type="button"
@@ -339,51 +393,51 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                     Dinner
                   </Button>
                 </div>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <RadioGroup
-              value={selections.cateringPackage || ""}
-              onValueChange={(value) => updateSelection("cateringPackage", value || null)}
-            >
-              {currentCateringPackages.map((pkg) => (
-                <div key={pkg.id} className="flex items-start space-x-3 py-1">
-                  <RadioGroupItem value={pkg.id} id={`catering-${cateringType}-${pkg.id}`} />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`catering-${cateringType}-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                          {pkg.name}
-                        </Label>
-                        <button
-                          type="button"
-                          onClick={() => openPackageDialog("catering", pkg.id)}
-                          className="text-muted-foreground hover:text-gold transition-colors"
-                        >
-                          <Info className="h-3.5 w-3.5" />
-                        </button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <RadioGroup
+                value={selections.cateringPackage || ""}
+                onValueChange={(value) => updateSelection("cateringPackage", value || null)}
+              >
+                {currentCateringPackages.map((pkg) => (
+                  <div key={pkg.id} className="flex items-start space-x-3 py-1">
+                    <RadioGroupItem value={pkg.id} id={`catering-${cateringType}-${pkg.id}`} />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor={`catering-${cateringType}-${pkg.id}`} className="text-sm font-medium cursor-pointer">
+                            {pkg.name}
+                          </Label>
+                          <button
+                            type="button"
+                            onClick={() => openPackageDialog("catering", pkg.id)}
+                            className="text-muted-foreground hover:text-gold transition-colors"
+                          >
+                            <Info className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                        <span className="text-sm font-medium text-gold">
+                          {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                        </span>
                       </div>
-                      <span className="text-sm font-medium text-gold">
-                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
-                      </span>
+                      <p className="text-xs text-muted-foreground">{pkg.description}</p>
                     </div>
-                    <p className="text-xs text-muted-foreground">{pkg.description}</p>
                   </div>
-                </div>
-              ))}
-              {selections.cateringPackage && (
-                <button
-                  type="button"
-                  onClick={() => updateSelection("cateringPackage", null)}
-                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
-                >
-                  Clear selection
-                </button>
-              )}
-            </RadioGroup>
-          </CardContent>
-        </Card>
+                ))}
+                {selections.cateringPackage && (
+                  <button
+                    type="button"
+                    onClick={() => updateSelection("cateringPackage", null)}
+                    className="text-xs text-muted-foreground hover:text-foreground mt-1"
+                  >
+                    Clear selection
+                  </button>
+                )}
+              </RadioGroup>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Bring Your Own Decorator/AV Banner */}
