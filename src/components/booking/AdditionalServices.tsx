@@ -40,9 +40,12 @@ interface AdditionalServicesProps {
 
 const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 
+type PaymentOption = "option1" | "option2" | "option3";
+
 const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType, eventDate }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
   const [cateringType, setCateringType] = useState<"canope" | "dinner" | "iftar">("dinner");
+  const [paymentOption, setPaymentOption] = useState<PaymentOption>("option1");
   const [dialogOpen, setDialogOpen] = useState<{
     type: "decor" | "av" | "catering" | null;
     packageId: string | null;
@@ -91,47 +94,91 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     return currency === "rf" ? `Rf. ${priceRf.toLocaleString()}` : `$${priceUsd.toLocaleString()}`;
   };
 
-  const calculateTotal = () => {
-    let totalRf = 0;
-    let totalUsd = 0;
+  const calculateCategoryTotals = () => {
+    let venueRf = 0, venueUsd = 0;
+    let decorRf = 0, decorUsd = 0;
+    let avRf = 0, avUsd = 0;
+    let cateringRf = 0, cateringUsd = 0;
 
-    // Add all selected spaces' prices using the correct pricing for the event date
+    // Venue charges (spaces)
     const spacesForDate = getSpacesForDate(eventDate);
     selectedSpaces.forEach(spaceId => {
       const space = spacesForDate.find(s => s.id === spaceId);
       if (space) {
-        totalRf += space.basePriceMVR;
-        totalUsd += space.basePriceUSD;
+        venueRf += space.basePriceMVR;
+        venueUsd += space.basePriceUSD;
       }
     });
 
-
+    // Bring own fee counts as venue coordination
     if (selections.bringOwnDecorAV) {
-      totalRf += BRING_OWN_FEE.priceRf;
-      totalUsd += BRING_OWN_FEE.priceUsd;
+      venueRf += BRING_OWN_FEE.priceRf;
+      venueUsd += BRING_OWN_FEE.priceUsd;
     }
 
+    // Decor charges
     if (selections.decorPackage && !selections.bringOwnDecorAV) {
       const price = getDecorPrice(selections.decorPackage);
-      totalRf += price.rf;
-      totalUsd += price.usd;
+      decorRf += price.rf;
+      decorUsd += price.usd;
     }
 
+    // AV charges
     if (selections.avPackage && !selections.bringOwnDecorAV) {
       const price = getAvPrice(selections.avPackage);
-      totalRf += price.rf;
-      totalUsd += price.usd;
+      avRf += price.rf;
+      avUsd += price.usd;
     }
 
+    // Catering charges
     if (selections.cateringPackage) {
       const pkg = currentCateringPackages.find(p => p.id === selections.cateringPackage);
       if (pkg) {
-        totalRf += pkg.priceRf * guestCount;
-        totalUsd += pkg.priceUsd * guestCount;
+        cateringRf += pkg.priceRf * guestCount;
+        cateringUsd += pkg.priceUsd * guestCount;
       }
     }
 
-    return { totalRf, totalUsd };
+    return {
+      venue: { rf: venueRf, usd: venueUsd },
+      decor: { rf: decorRf, usd: decorUsd },
+      av: { rf: avRf, usd: avUsd },
+      catering: { rf: cateringRf, usd: cateringUsd },
+      total: {
+        rf: venueRf + decorRf + avRf + cateringRf,
+        usd: venueUsd + decorUsd + avUsd + cateringUsd
+      }
+    };
+  };
+
+  const calculatePaymentAmount = (option: PaymentOption) => {
+    const cats = calculateCategoryTotals();
+    let payRf = 0, payUsd = 0;
+
+    switch (option) {
+      case "option1":
+        // 100% Venue
+        payRf = cats.venue.rf;
+        payUsd = cats.venue.usd;
+        break;
+      case "option2":
+        // 100% Venue + 20% Decor + 20% AV + 50% Catering
+        payRf = cats.venue.rf + (cats.decor.rf * 0.2) + (cats.av.rf * 0.2) + (cats.catering.rf * 0.5);
+        payUsd = cats.venue.usd + (cats.decor.usd * 0.2) + (cats.av.usd * 0.2) + (cats.catering.usd * 0.5);
+        break;
+      case "option3":
+        // 100% all
+        payRf = cats.total.rf;
+        payUsd = cats.total.usd;
+        break;
+    }
+
+    return { rf: Math.round(payRf), usd: Math.round(payUsd) };
+  };
+
+  const calculateTotal = () => {
+    const cats = calculateCategoryTotals();
+    return { totalRf: cats.total.rf, totalUsd: cats.total.usd };
   };
 
   const openPackageDialog = (type: "decor" | "av" | "catering", packageId: string) => {
@@ -506,10 +553,73 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
         </div>
       )}
 
+      {/* Choose Booking Amount to Pay */}
+      {hasSelections && (
+        <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Choose Booking Amount to Pay</h3>
+          <RadioGroup value={paymentOption} onValueChange={(val) => setPaymentOption(val as PaymentOption)} className="space-y-3">
+            <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option1" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
+              <RadioGroupItem value="option1" id="payOption1" className="mt-1" />
+              <Label htmlFor="payOption1" className="flex-1 cursor-pointer">
+                <div className="font-medium text-foreground">Option 1</div>
+                <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
+                  <li>• 100% Venue Charges</li>
+                </ul>
+                <div className="text-sm font-semibold text-gold mt-2">
+                  Amount: {formatPrice(calculatePaymentAmount("option1").rf, calculatePaymentAmount("option1").usd)}
+                </div>
+              </Label>
+            </div>
+            
+            <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option2" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
+              <RadioGroupItem value="option2" id="payOption2" className="mt-1" />
+              <Label htmlFor="payOption2" className="flex-1 cursor-pointer">
+                <div className="font-medium text-foreground">Option 2</div>
+                <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
+                  <li>• 100% Venue Charges</li>
+                  <li>• 20% Decor Charges</li>
+                  <li>• 20% AV Charges</li>
+                  <li>• 50% Catering Charges</li>
+                </ul>
+                <div className="text-sm font-semibold text-gold mt-2">
+                  Amount: {formatPrice(calculatePaymentAmount("option2").rf, calculatePaymentAmount("option2").usd)}
+                </div>
+              </Label>
+            </div>
+            
+            <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option3" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
+              <RadioGroupItem value="option3" id="payOption3" className="mt-1" />
+              <Label htmlFor="payOption3" className="flex-1 cursor-pointer">
+                <div className="font-medium text-foreground">Option 3 (Full Payment)</div>
+                <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
+                  <li>• 100% Venue Charges</li>
+                  <li>• 100% Decor Charges</li>
+                  <li>• 100% AV Charges</li>
+                  <li>• 100% Catering Charges</li>
+                </ul>
+                <div className="text-sm font-semibold text-gold mt-2">
+                  Amount: {formatPrice(calculatePaymentAmount("option3").rf, calculatePaymentAmount("option3").usd)}
+                </div>
+              </Label>
+            </div>
+          </RadioGroup>
+        </div>
+      )}
+
       {/* Pay for Booking */}
       {hasSelections && (
         <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border">
           <h3 className="text-lg font-semibold text-foreground mb-4">Pay for Booking</h3>
+          
+          {/* Selected Payment Amount */}
+          <div className="mb-4 p-3 bg-gold/10 rounded-lg border border-gold/20">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-foreground">Amount to Pay</span>
+              <span className="text-lg font-bold text-gold">
+                {formatPrice(calculatePaymentAmount(paymentOption).rf, calculatePaymentAmount(paymentOption).usd)}
+              </span>
+            </div>
+          </div>
           
           {/* Bank Transfer Options */}
           <div className="space-y-3 mb-4">
