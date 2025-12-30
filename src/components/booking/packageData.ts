@@ -484,8 +484,8 @@ export const CATERING_IFTAR_DETAILS: PackageDetail[] = [
     id: "silver",
     name: "Silver Iftar",
     description: "Traditional Iftar spread per person",
-    priceRf: 180,
-    priceUsd: 12,
+    priceRf: 280,
+    priceUsd: 18,
     includes: [
       "Dates & Arabic coffee",
       "Fresh juices & water",
@@ -502,8 +502,8 @@ export const CATERING_IFTAR_DETAILS: PackageDetail[] = [
     id: "gold",
     name: "Gold Iftar",
     description: "Premium Iftar experience per person",
-    priceRf: 250,
-    priceUsd: 16,
+    priceRf: 360,
+    priceUsd: 23,
     includes: [
       "Premium dates & Arabic coffee",
       "Fresh juices & mocktails",
@@ -521,8 +521,8 @@ export const CATERING_IFTAR_DETAILS: PackageDetail[] = [
     id: "platinum",
     name: "Platinum Iftar",
     description: "Luxury Iftar feast per person",
-    priceRf: 350,
-    priceUsd: 23,
+    priceRf: 420,
+    priceUsd: 27,
     includes: [
       "Premium Medjool dates & Arabic coffee",
       "Welcome drinks & fresh juices",
