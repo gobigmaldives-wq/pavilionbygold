@@ -506,6 +506,52 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
         </div>
       )}
 
+      {/* Pay for Booking */}
+      {hasSelections && (
+        <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Pay for Booking</h3>
+          
+          {/* Bank Transfer Options */}
+          <div className="space-y-3 mb-4">
+            <p className="text-sm text-muted-foreground">Choose your bank for payment:</p>
+            <div className="flex flex-wrap gap-3">
+              <a 
+                href="https://www.bankofmaldives.com.mv/paylink" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
+              >
+                BML Paylink
+              </a>
+              <a 
+                href="https://www.mib.com.mv" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
+              >
+                MIB Paylink
+              </a>
+            </div>
+          </div>
+
+          {/* Transfer Slip Upload */}
+          <div className="pt-4 border-t border-border">
+            <Label htmlFor="transferSlip" className="text-sm font-medium text-foreground">
+              Attach Transfer Slip
+            </Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              After making payment, upload your transfer slip as proof of payment.
+            </p>
+            <input
+              type="file"
+              id="transferSlip"
+              accept="image/*,.pdf"
+              className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 file:cursor-pointer cursor-pointer"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Package Detail Dialog */}
       {currentPackageData && dialogOpen.type && (
         <PackageDetailDialog
