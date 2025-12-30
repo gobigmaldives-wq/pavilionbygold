@@ -150,12 +150,33 @@ export const SPACES_REGULAR: Space[] = [
 // Cutoff date for pre-opening rates
 export const PRE_OPENING_CUTOFF = new Date('2026-04-01');
 
-// Floor 2 availability date (February 1st, 2025)
+// Floor 2 availability date (February 1st, 2026)
 export const FLOOR2_AVAILABLE_DATE = new Date('2026-02-01');
+
+// January 2026 special pricing period
+export const JANUARY_2026_START = new Date('2026-01-01');
+export const JANUARY_2026_END = new Date('2026-02-01');
+
+// Special January 2026 Entire Venue pricing
+const ENTIRE_VENUE_JANUARY_2026: Space = {
+  id: 'entire_venue',
+  name: 'Entire Venue',
+  capacity: 360,
+  basePriceMVR: 23000,
+  basePriceUSD: 1492,
+  description: 'Complete venue access including all floors and garden',
+};
 
 // Get the correct space pricing based on event date, filtering out unavailable spaces
 export const getSpacesForDate = (eventDate?: Date): Space[] => {
-  const baseSpaces = !eventDate || eventDate < PRE_OPENING_CUTOFF ? SPACES : SPACES_REGULAR;
+  let baseSpaces = !eventDate || eventDate < PRE_OPENING_CUTOFF ? SPACES : SPACES_REGULAR;
+  
+  // Apply January 2026 special pricing for Entire Venue
+  if (eventDate && eventDate >= JANUARY_2026_START && eventDate < JANUARY_2026_END) {
+    baseSpaces = baseSpaces.map(space => 
+      space.id === 'entire_venue' ? ENTIRE_VENUE_JANUARY_2026 : space
+    );
+  }
   
   // If no event date or event date is before Floor 2 availability, filter out Floor 2
   if (!eventDate || eventDate < FLOOR2_AVAILABLE_DATE) {
