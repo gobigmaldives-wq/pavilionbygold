@@ -157,17 +157,17 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
 
     switch (option) {
       case "option1":
-        // 100% Venue
+        // 100% Venue only
         payRf = cats.venue.rf;
         payUsd = cats.venue.usd;
         break;
       case "option2":
-        // 100% Venue + 20% Decor + 20% AV + 50% Catering
-        payRf = cats.venue.rf + (cats.decor.rf * 0.2) + (cats.av.rf * 0.2) + (cats.catering.rf * 0.5);
-        payUsd = cats.venue.usd + (cats.decor.usd * 0.2) + (cats.av.usd * 0.2) + (cats.catering.usd * 0.5);
+        // 50% of all selected services
+        payRf = cats.total.rf * 0.5;
+        payUsd = cats.total.usd * 0.5;
         break;
       case "option3":
-        // 100% all
+        // 100% all selected services
         payRf = cats.total.rf;
         payUsd = cats.total.usd;
         break;
@@ -576,10 +576,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               <Label htmlFor="payOption2" className="flex-1 cursor-pointer">
                 <div className="font-medium text-foreground">Option 2</div>
                 <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
-                  <li>• 100% Venue Charges</li>
-                  <li>• 20% Decor Charges</li>
-                  <li>• 20% AV Charges</li>
-                  <li>• 50% Catering Charges</li>
+                  <li>• 50% of all selected services</li>
                 </ul>
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option2").rf, calculatePaymentAmount("option2").usd)}
@@ -592,10 +589,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               <Label htmlFor="payOption3" className="flex-1 cursor-pointer">
                 <div className="font-medium text-foreground">Option 3 (Full Payment)</div>
                 <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
-                  <li>• 100% Venue Charges</li>
-                  <li>• 100% Decor Charges</li>
-                  <li>• 100% AV Charges</li>
-                  <li>• 100% Catering Charges</li>
+                  <li>• 100% of all selected services</li>
                 </ul>
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option3").rf, calculatePaymentAmount("option3").usd)}
