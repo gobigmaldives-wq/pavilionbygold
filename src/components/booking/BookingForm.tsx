@@ -547,8 +547,8 @@ const BookingForm = () => {
                 <h3 className="font-semibold text-foreground mb-2">1. Booking & Confirmation</h3>
                 <ul className="list-disc pl-5 space-y-1">
                   <li>A booking is considered tentatively reserved only upon submission of the booking request form.</li>
-                  <li>A booking is confirmed only after written approval by venue management and receipt of the required advance payment / retainer.</li>
-                  <li>The venue reserves the right to decline or cancel any booking that does not comply with venue policies, safety standards, or payment timelines.</li>
+                  <li>Bookings can be confirmed only after payment has been received.</li>
+                  <li>The venue reserves the right to decline or cancel any booking that does not comply with venue policies, safety standards, or payment timelines. In such cases, no payment will be refunded.</li>
                 </ul>
               </section>
               
@@ -592,9 +592,8 @@ const BookingForm = () => {
               <section>
                 <h3 className="font-semibold text-foreground mb-2">6. Cancellation & Rescheduling</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Cancellations must be made in writing.</li>
-                  <li>Cancellation charges apply based on notice period (to be specified in the invoice/proposal).</li>
-                  <li>Rescheduling is subject to availability and may incur additional costs.</li>
+                  <li>In the event of cancellation, none of the paid amount can be refunded.</li>
+                  <li>Rescheduling to a new date is possible only after confirming and discussing with the venue.</li>
                 </ul>
               </section>
               
@@ -614,7 +613,7 @@ const BookingForm = () => {
                   <li>All décor setups must be approved in advance.</li>
                   <li>No drilling, permanent fixing, nailing, or structural alterations are allowed.</li>
                   <li>Confetti, glitter, smoke effects, or hazardous materials are prohibited unless approved.</li>
-                  <li>Any damage caused during installation or dismantling will be charged to the client.</li>
+                  <li>Any damage caused during installation or dismantling while using your own decorator, AV, or any other external vendor will be charged to the client.</li>
                 </ul>
               </section>
               
@@ -623,7 +622,6 @@ const BookingForm = () => {
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Outside food and beverages are not permitted unless approved in writing.</li>
                   <li>All food handling must comply with hygiene and safety regulations.</li>
-                  <li>Alcohol service (if applicable) must follow local laws and venue policies.</li>
                 </ul>
               </section>
               
@@ -639,7 +637,7 @@ const BookingForm = () => {
               <section>
                 <h3 className="font-semibold text-foreground mb-2">11. Damages & Liability</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>The client is fully responsible for any damage caused by guests, vendors, or contractors.</li>
+                  <li>The client is fully responsible for any damage caused by guests, vendors, or contractors coming from the client side.</li>
                   <li>Repair or replacement costs will be deducted from the security deposit or billed separately.</li>
                 </ul>
               </section>
