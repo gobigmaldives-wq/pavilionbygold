@@ -397,22 +397,22 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-2">
-              <div className="grid grid-cols-3 gap-5">
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-3 gap-3">
                 {currentCateringPackages.map((pkg) => (
                   <div
                     key={pkg.id}
                     onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
-                    className={`relative px-5 py-6 rounded-xl border-2 cursor-pointer transition-all shadow-sm hover:shadow-md ${
+                    className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
                       selections.cateringPackage === pkg.id
                         ? 'border-gold bg-gold/10'
-                        : 'border-border hover:border-gold/50 bg-card'
+                        : 'border-border hover:border-gold/50 bg-muted/30'
                     }`}
                   >
                     <div className="flex flex-col items-center text-center gap-2">
-                      <h4 className="font-bold text-base">{pkg.name}</h4>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{pkg.description}</p>
-                      <span className="text-xl font-bold text-gold mt-1">
+                      <h4 className="font-semibold text-sm">{pkg.name}</h4>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
+                      <span className="text-lg font-bold text-gold mt-1">
                         {formatPrice(pkg.priceRf, pkg.priceUsd)}
                       </span>
                       <button
@@ -423,7 +423,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                         }}
                         className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
                       >
-                        <Info className="h-3.5 w-3.5" />
+                        <Info className="h-3 w-3" />
                         View details
                       </button>
                     </div>
