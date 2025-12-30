@@ -398,21 +398,21 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               </div>
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-4">
                 {currentCateringPackages.map((pkg) => (
                   <div
                     key={pkg.id}
                     onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
-                    className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all shadow-sm hover:shadow-md ${
                       selections.cateringPackage === pkg.id
                         ? 'border-gold bg-gold/10'
-                        : 'border-border hover:border-gold/50 bg-muted/30'
+                        : 'border-border hover:border-gold/50 bg-card'
                     }`}
                   >
-                    <div className="flex flex-col items-center text-center gap-2">
-                      <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                      <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                      <span className="text-lg font-bold text-gold mt-1">
+                    <div className="flex flex-col items-center text-center gap-3">
+                      <h4 className="font-bold text-base">{pkg.name}</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed min-h-[40px]">{pkg.description}</p>
+                      <span className="text-2xl font-bold text-gold mt-2">
                         {formatPrice(pkg.priceRf, pkg.priceUsd)}
                       </span>
                       <button
@@ -421,9 +421,9 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                           e.stopPropagation();
                           openPackageDialog("catering", pkg.id);
                         }}
-                        className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                        className="text-sm text-muted-foreground hover:text-gold transition-colors flex items-center gap-1.5 mt-2"
                       >
-                        <Info className="h-3 w-3" />
+                        <Info className="h-4 w-4" />
                         View details
                       </button>
                     </div>
