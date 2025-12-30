@@ -203,45 +203,47 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <RadioGroup
-              value={selections.cateringPackage || ""}
-              onValueChange={(value) => updateSelection("cateringPackage", value || null)}
-            >
+            <div className="grid grid-cols-3 gap-3">
               {currentCateringPackages.map((pkg) => (
-                <div key={pkg.id} className="flex items-start space-x-3 py-1">
-                  <RadioGroupItem value={pkg.id} id={`catering-iftar-${pkg.id}`} />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`catering-iftar-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                          {pkg.name}
-                        </Label>
-                        <button
-                          type="button"
-                          onClick={() => openPackageDialog("catering", pkg.id)}
-                          className="text-muted-foreground hover:text-gold transition-colors"
-                        >
-                          <Info className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <span className="text-sm font-medium text-gold">
-                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{pkg.description}</p>
+                <div
+                  key={pkg.id}
+                  onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
+                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    selections.cateringPackage === pkg.id
+                      ? 'border-gold bg-gold/10'
+                      : 'border-border hover:border-gold/50 bg-muted/30'
+                  }`}
+                >
+                  <div className="flex flex-col items-center text-center gap-2">
+                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
+                    <span className="text-lg font-bold text-gold mt-1">
+                      {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPackageDialog("catering", pkg.id);
+                      }}
+                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                    >
+                      <Info className="h-3 w-3" />
+                      View details
+                    </button>
                   </div>
                 </div>
               ))}
-              {selections.cateringPackage && (
-                <button
-                  type="button"
-                  onClick={() => updateSelection("cateringPackage", null)}
-                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
-                >
-                  Clear selection
-                </button>
-              )}
-            </RadioGroup>
+            </div>
+            {selections.cateringPackage && (
+              <button
+                type="button"
+                onClick={() => updateSelection("cateringPackage", null)}
+                className="text-xs text-muted-foreground hover:text-foreground mt-3"
+              >
+                Clear selection
+              </button>
+            )}
           </CardContent>
         </Card>
       )}
