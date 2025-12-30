@@ -31,6 +31,7 @@ export type Database = {
           phone: string
           space: Database["public"]["Enums"]["space_type"]
           status: Database["public"]["Enums"]["booking_status"]
+          transfer_slip_url: string | null
           updated_at: string
         }
         Insert: {
@@ -49,6 +50,7 @@ export type Database = {
           phone: string
           space: Database["public"]["Enums"]["space_type"]
           status?: Database["public"]["Enums"]["booking_status"]
+          transfer_slip_url?: string | null
           updated_at?: string
         }
         Update: {
@@ -67,6 +69,7 @@ export type Database = {
           phone?: string
           space?: Database["public"]["Enums"]["space_type"]
           status?: Database["public"]["Enums"]["booking_status"]
+          transfer_slip_url?: string | null
           updated_at?: string
         }
         Relationships: []
