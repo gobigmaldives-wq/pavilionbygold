@@ -40,7 +40,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import SpaceCard from "./SpaceCard";
-import AdditionalServices, { ServiceSelections } from "./AdditionalServices";
+import AdditionalServices, { ServiceSelections, PaymentOption } from "./AdditionalServices";
 import { SPACES, EVENT_TYPES, SpaceType, getSpacesForDate } from "@/types/booking";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -75,6 +75,8 @@ const BookingForm = () => {
     cateringPackage: null,
     bringOwnDecorAV: false,
   });
+  const [paymentOption, setPaymentOption] = useState<PaymentOption>("option1");
+  const [transferSlip, setTransferSlip] = useState<File | null>(null);
   const { data: bookedDates = [] } = useBookedDates();
   const spaceSelectionRef = useRef<HTMLDivElement>(null);
 
@@ -158,6 +160,24 @@ const BookingForm = () => {
         ? `Selected spaces: ${data.spaces.join(", ")}. ` 
         : "";
       
+      // Upload transfer slip if provided
+      let transferSlipUrl: string | null = null;
+      if (transferSlip) {
+        const fileExt = transferSlip.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('transfer-slips')
+          .upload(fileName, transferSlip);
+        
+        if (uploadError) {
+          console.error("Transfer slip upload error:", uploadError);
+          // Continue with booking even if upload fails
+        } else {
+          transferSlipUrl = uploadData.path;
+        }
+      }
+      
       const { error } = await supabase.from("bookings").insert({
         full_name: data.fullName,
         phone: data.phone,
@@ -170,6 +190,7 @@ const BookingForm = () => {
         notes: additionalSpacesNote + (data.notes || ""),
         agreed_to_rules: data.agreedToRules,
         agreed_at: new Date().toISOString(),
+        transfer_slip_url: transferSlipUrl,
       });
 
       if (error) throw error;
@@ -455,6 +476,10 @@ const BookingForm = () => {
             selectedSpaces={selectedSpaces}
             eventType={form.watch("eventType") || "wedding"}
             eventDate={watchedEventDate}
+            paymentOption={paymentOption}
+            onPaymentOptionChange={setPaymentOption}
+            transferSlip={transferSlip}
+            onTransferSlipChange={setTransferSlip}
           />
 
           <FormField

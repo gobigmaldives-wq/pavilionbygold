@@ -30,6 +30,8 @@ export interface ServiceSelections {
   bringOwnDecorAV: boolean;
 }
 
+export type PaymentOption = "option1" | "option2" | "option3";
+
 interface AdditionalServicesProps {
   selections: ServiceSelections;
   onSelectionChange: (selections: ServiceSelections) => void;
@@ -37,18 +39,18 @@ interface AdditionalServicesProps {
   selectedSpaces: SpaceType[];
   eventType: string;
   eventDate?: Date;
+  paymentOption: PaymentOption;
+  onPaymentOptionChange: (option: PaymentOption) => void;
+  transferSlip: File | null;
+  onTransferSlipChange: (file: File | null) => void;
 }
 
 const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 
-type PaymentOption = "option1" | "option2" | "option3";
-
-const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType, eventDate }: AdditionalServicesProps) => {
+const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType, eventDate, paymentOption, onPaymentOptionChange, transferSlip, onTransferSlipChange }: AdditionalServicesProps) => {
   const { toast } = useToast();
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
   const [cateringType, setCateringType] = useState<"canope" | "dinner" | "iftar">("dinner");
-  const [paymentOption, setPaymentOption] = useState<PaymentOption>("option1");
-  const [transferSlip, setTransferSlip] = useState<File | null>(null);
   const [dialogOpen, setDialogOpen] = useState<{
     type: "decor" | "av" | "catering" | null;
     packageId: string | null;
@@ -568,7 +570,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       {hasSelections && (
         <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border">
           <h3 className="text-lg font-semibold text-foreground mb-4">Choose Booking Amount to Pay</h3>
-          <RadioGroup value={paymentOption} onValueChange={(val) => setPaymentOption(val as PaymentOption)} className="space-y-3">
+          <RadioGroup value={paymentOption} onValueChange={(val) => onPaymentOptionChange(val as PaymentOption)} className="space-y-3">
             <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option1" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
               <RadioGroupItem value="option1" id="payOption1" className="mt-1" />
               <Label htmlFor="payOption1" className="flex-1 cursor-pointer">
@@ -747,7 +749,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={() => setTransferSlip(null)}
+                  onClick={() => onTransferSlipChange(null)}
                   className="shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
                   <X className="h-4 w-4" />
@@ -761,7 +763,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 accept="image/*,.pdf"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-                  if (file) setTransferSlip(file);
+                  if (file) onTransferSlipChange(file);
                 }}
                 className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 file:cursor-pointer cursor-pointer"
               />
