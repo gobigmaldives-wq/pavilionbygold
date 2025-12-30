@@ -397,13 +397,13 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-0">
-              <div className="grid grid-cols-3 gap-4">
+            <CardContent className="pt-2">
+              <div className="grid grid-cols-3 gap-5">
                 {currentCateringPackages.map((pkg) => (
                   <div
                     key={pkg.id}
                     onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
-                    className={`relative px-4 py-5 rounded-xl border-2 cursor-pointer transition-all shadow-sm hover:shadow-md aspect-[4/3] flex items-center justify-center ${
+                    className={`relative px-5 py-6 rounded-xl border-2 cursor-pointer transition-all shadow-sm hover:shadow-md ${
                       selections.cateringPackage === pkg.id
                         ? 'border-gold bg-gold/10'
                         : 'border-border hover:border-gold/50 bg-card'
