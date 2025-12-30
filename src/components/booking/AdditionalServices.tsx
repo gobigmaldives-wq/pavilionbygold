@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle, Copy, X } from "lucide-react";
+import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle, Copy, X, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { SpaceType, getSpacesForDate } from "@/types/booking";
@@ -272,17 +272,19 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                     <span className="text-lg font-bold text-gold mt-1">
                       {formatPrice(pkg.priceRf, pkg.priceUsd)}
                     </span>
-                    <button
+                    <Button
                       type="button"
+                      variant="secondary"
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         openPackageDialog("catering", pkg.id);
                       }}
-                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                      className="mt-2 text-xs h-7 px-3"
                     >
-                      <Info className="h-3 w-3" />
-                      View details
-                    </button>
+                      <Eye className="h-3 w-3 mr-1" />
+                      View Details
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -331,17 +333,19 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   <span className="text-lg font-bold text-gold mt-1">
                     {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
                   </span>
-                  <button
+                  <Button
                     type="button"
+                    variant="secondary"
+                    size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       openPackageDialog("decor", pkg.id);
                     }}
-                    className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                    className="mt-2 text-xs h-7 px-3"
                   >
-                    <Info className="h-3 w-3" />
-                    View details
-                  </button>
+                    <Eye className="h-3 w-3 mr-1" />
+                    View Details
+                  </Button>
                 </div>
               </div>
             ))}
@@ -386,17 +390,19 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   <span className="text-lg font-bold text-gold mt-1">
                     {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
                   </span>
-                  <button
+                  <Button
                     type="button"
+                    variant="secondary"
+                    size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       openPackageDialog("av", pkg.id);
                     }}
-                    className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                    className="mt-2 text-xs h-7 px-3"
                   >
-                    <Info className="h-3 w-3" />
-                    View details
-                  </button>
+                    <Eye className="h-3 w-3 mr-1" />
+                    View Details
+                  </Button>
                 </div>
               </div>
             ))}
@@ -467,17 +473,19 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                     <span className="text-lg font-bold text-gold mt-1">
                       {formatPrice(pkg.priceRf, pkg.priceUsd)}
                     </span>
-                    <button
+                    <Button
                       type="button"
+                      variant="secondary"
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         openPackageDialog("catering", pkg.id);
                       }}
-                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                      className="mt-2 text-xs h-7 px-3"
                     >
-                      <Info className="h-3 w-3" />
-                      View details
-                    </button>
+                      <Eye className="h-3 w-3 mr-1" />
+                      View Details
+                    </Button>
                   </div>
                 </div>
               ))}
