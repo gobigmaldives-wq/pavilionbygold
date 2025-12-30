@@ -94,6 +94,9 @@ const BookingForm = () => {
   const watchedEventDate = useWatch({ control: form.control, name: "eventDate" });
   const watchedGuestCount = useWatch({ control: form.control, name: "guestCount" });
 
+  // Floor 1 Garden can only be selected if Floor 1 or Floor 2 is already selected
+  const canSelectGarden = selectedSpaces.includes("floor1") || selectedSpaces.includes("floor2");
+
   const handleSpaceSelect = (spaceId: SpaceType, fieldOnChange: (value: SpaceType[]) => void) => {
     let newSelection: SpaceType[];
     
@@ -108,6 +111,11 @@ const BookingForm = () => {
       } else if (selectedSpaces.includes(spaceId)) {
         // If already selected, deselect it
         newSelection = selectedSpaces.filter(s => s !== spaceId);
+        // If deselecting floor1 or floor2, also remove garden
+        if ((spaceId === "floor1" || spaceId === "floor2") && 
+            !newSelection.includes("floor1") && !newSelection.includes("floor2")) {
+          newSelection = newSelection.filter(s => s !== "floor1_garden");
+        }
       } else {
         // Add to selection
         newSelection = [...selectedSpaces, spaceId];
@@ -393,16 +401,21 @@ const BookingForm = () => {
                   </p>
                   <FormControl>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      {getSpacesForDate(watchedEventDate).map((space) => (
-                        <SpaceCard
-                          key={space.id}
-                          space={space}
-                          selected={selectedSpaces.includes(space.id)}
-                          currency={spaceCurrency}
-                          eventDate={watchedEventDate}
-                          onSelect={() => handleSpaceSelect(space.id, field.onChange)}
-                        />
-                      ))}
+                      {getSpacesForDate(watchedEventDate).map((space) => {
+                        const isGardenDisabled = space.id === "floor1_garden" && !canSelectGarden;
+                        return (
+                          <SpaceCard
+                            key={space.id}
+                            space={space}
+                            selected={selectedSpaces.includes(space.id)}
+                            currency={spaceCurrency}
+                            eventDate={watchedEventDate}
+                            onSelect={() => handleSpaceSelect(space.id, field.onChange)}
+                            disabled={isGardenDisabled}
+                            disabledReason={isGardenDisabled ? "Select Floor 1 or Floor 2 first" : undefined}
+                          />
+                        );
+                      })}
                     </div>
                   </FormControl>
                   <FormMessage />
