@@ -248,121 +248,118 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        {/* Decor */}
-        <Card className={`border-border hover:border-gold/50 transition-colors ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gold/10 rounded-lg">
-                <Palette className="h-5 w-5 text-gold" />
-              </div>
-              <div>
-                <CardTitle className="text-base font-medium">Decor</CardTitle>
-                <p className="text-xs text-muted-foreground">In-house packages</p>
-              </div>
+      {/* Decor - Full width */}
+      <Card className={`border-border hover:border-gold/50 transition-colors ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gold/10 rounded-lg">
+              <Palette className="h-5 w-5 text-gold" />
             </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-3 gap-3">
-              {currentDecorPackages.map((pkg) => (
-                <div
-                  key={pkg.id}
-                  onClick={() => !selections.bringOwnDecorAV && updateSelection("decorPackage", selections.decorPackage === pkg.id ? null : pkg.id)}
-                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                    selections.decorPackage === pkg.id
-                      ? 'border-gold bg-gold/10'
-                      : 'border-border hover:border-gold/50 bg-muted/30'
-                  } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
-                >
-                  <div className="flex flex-col items-center text-center gap-2">
-                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                    <span className="text-lg font-bold text-gold mt-1">
-                      {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openPackageDialog("decor", pkg.id);
-                      }}
-                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
-                    >
-                      <Info className="h-3 w-3" />
-                      View details
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div>
+              <CardTitle className="text-base font-medium">Decor</CardTitle>
+              <p className="text-xs text-muted-foreground">In-house packages</p>
             </div>
-            {!selections.bringOwnDecorAV && selections.decorPackage && (
-              <button
-                type="button"
-                onClick={() => updateSelection("decorPackage", null)}
-                className="text-xs text-muted-foreground hover:text-foreground mt-3"
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="grid grid-cols-3 gap-3">
+            {currentDecorPackages.map((pkg) => (
+              <div
+                key={pkg.id}
+                onClick={() => !selections.bringOwnDecorAV && updateSelection("decorPackage", selections.decorPackage === pkg.id ? null : pkg.id)}
+                className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  selections.decorPackage === pkg.id
+                    ? 'border-gold bg-gold/10'
+                    : 'border-border hover:border-gold/50 bg-muted/30'
+                } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
               >
-                Clear selection
-              </button>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* AV */}
-        <Card className={`border-border hover:border-gold/50 transition-colors ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gold/10 rounded-lg">
-                <Volume2 className="h-5 w-5 text-gold" />
-              </div>
-              <CardTitle className="text-base font-medium">Audio Visual</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-3 gap-3">
-              {currentAvPackages.map((pkg) => (
-                <div
-                  key={pkg.id}
-                  onClick={() => !selections.bringOwnDecorAV && updateSelection("avPackage", selections.avPackage === pkg.id ? null : pkg.id)}
-                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                    selections.avPackage === pkg.id
-                      ? 'border-gold bg-gold/10'
-                      : 'border-border hover:border-gold/50 bg-muted/30'
-                  } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
-                >
-                  <div className="flex flex-col items-center text-center gap-2">
-                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                    <span className="text-lg font-bold text-gold mt-1">
-                      {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openPackageDialog("av", pkg.id);
-                      }}
-                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
-                    >
-                      <Info className="h-3 w-3" />
-                      View details
-                    </button>
-                  </div>
+                <div className="flex flex-col items-center text-center gap-2">
+                  <h4 className="font-semibold text-sm">{pkg.name}</h4>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
+                  <span className="text-lg font-bold text-gold mt-1">
+                    {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openPackageDialog("decor", pkg.id);
+                    }}
+                    className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                  >
+                    <Info className="h-3 w-3" />
+                    View details
+                  </button>
                 </div>
-              ))}
+              </div>
+            ))}
+          </div>
+          {!selections.bringOwnDecorAV && selections.decorPackage && (
+            <button
+              type="button"
+              onClick={() => updateSelection("decorPackage", null)}
+              className="text-xs text-muted-foreground hover:text-foreground mt-3"
+            >
+              Clear selection
+            </button>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* AV - Full width */}
+      <Card className={`border-border hover:border-gold/50 transition-colors mt-4 ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gold/10 rounded-lg">
+              <Volume2 className="h-5 w-5 text-gold" />
             </div>
-            {!selections.bringOwnDecorAV && selections.avPackage && (
-              <button
-                type="button"
-                onClick={() => updateSelection("avPackage", null)}
-                className="text-xs text-muted-foreground hover:text-foreground mt-3"
+            <CardTitle className="text-base font-medium">Audio Visual</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="grid grid-cols-3 gap-3">
+            {currentAvPackages.map((pkg) => (
+              <div
+                key={pkg.id}
+                onClick={() => !selections.bringOwnDecorAV && updateSelection("avPackage", selections.avPackage === pkg.id ? null : pkg.id)}
+                className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  selections.avPackage === pkg.id
+                    ? 'border-gold bg-gold/10'
+                    : 'border-border hover:border-gold/50 bg-muted/30'
+                } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
               >
-                Clear selection
-              </button>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+                <div className="flex flex-col items-center text-center gap-2">
+                  <h4 className="font-semibold text-sm">{pkg.name}</h4>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
+                  <span className="text-lg font-bold text-gold mt-1">
+                    {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openPackageDialog("av", pkg.id);
+                    }}
+                    className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                  >
+                    <Info className="h-3 w-3" />
+                    View details
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          {!selections.bringOwnDecorAV && selections.avPackage && (
+            <button
+              type="button"
+              onClick={() => updateSelection("avPackage", null)}
+              className="text-xs text-muted-foreground hover:text-foreground mt-3"
+            >
+              Clear selection
+            </button>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Catering - only for non-Ramadan events - Full width */}
       {!isRamadan && (
