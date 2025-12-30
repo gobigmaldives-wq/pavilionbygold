@@ -151,7 +151,7 @@ export const SPACES_REGULAR: Space[] = [
 export const PRE_OPENING_CUTOFF = new Date('2026-04-01');
 
 // Floor 2 availability date (February 1st, 2025)
-export const FLOOR2_AVAILABLE_DATE = new Date('2025-02-01');
+export const FLOOR2_AVAILABLE_DATE = new Date('2026-02-01');
 
 // Get the correct space pricing based on event date, filtering out unavailable spaces
 export const getSpacesForDate = (eventDate?: Date): Space[] => {
