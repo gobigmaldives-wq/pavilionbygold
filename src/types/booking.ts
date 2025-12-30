@@ -150,10 +150,19 @@ export const SPACES_REGULAR: Space[] = [
 // Cutoff date for pre-opening rates
 export const PRE_OPENING_CUTOFF = new Date('2026-04-01');
 
-// Get the correct space pricing based on event date
+// Floor 2 availability date (February 1st, 2025)
+export const FLOOR2_AVAILABLE_DATE = new Date('2025-02-01');
+
+// Get the correct space pricing based on event date, filtering out unavailable spaces
 export const getSpacesForDate = (eventDate?: Date): Space[] => {
-  if (!eventDate) return SPACES; // Default to pre-opening rates
-  return eventDate >= PRE_OPENING_CUTOFF ? SPACES_REGULAR : SPACES;
+  const baseSpaces = !eventDate || eventDate < PRE_OPENING_CUTOFF ? SPACES : SPACES_REGULAR;
+  
+  // If no event date or event date is before Floor 2 availability, filter out Floor 2
+  if (!eventDate || eventDate < FLOOR2_AVAILABLE_DATE) {
+    return baseSpaces.filter(space => space.id !== 'floor2');
+  }
+  
+  return baseSpaces;
 };
 
 // Get a specific space with correct pricing for a date
