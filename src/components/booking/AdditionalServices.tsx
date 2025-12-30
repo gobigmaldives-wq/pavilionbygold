@@ -264,46 +264,47 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <RadioGroup
-              value={selections.decorPackage || ""}
-              onValueChange={(value) => updateSelection("decorPackage", value || null)}
-              disabled={selections.bringOwnDecorAV}
-            >
+            <div className="grid grid-cols-3 gap-3">
               {currentDecorPackages.map((pkg) => (
-                <div key={pkg.id} className="flex items-start space-x-3 py-1">
-                  <RadioGroupItem value={pkg.id} id={`decor-${pkg.id}`} disabled={selections.bringOwnDecorAV} />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`decor-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                          {pkg.name}
-                        </Label>
-                        <button
-                          type="button"
-                          onClick={() => openPackageDialog("decor", pkg.id)}
-                          className="text-muted-foreground hover:text-gold transition-colors"
-                        >
-                          <Info className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <span className="text-sm font-medium text-gold">
-                        {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{pkg.description}</p>
+                <div
+                  key={pkg.id}
+                  onClick={() => !selections.bringOwnDecorAV && updateSelection("decorPackage", selections.decorPackage === pkg.id ? null : pkg.id)}
+                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    selections.decorPackage === pkg.id
+                      ? 'border-gold bg-gold/10'
+                      : 'border-border hover:border-gold/50 bg-muted/30'
+                  } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
+                >
+                  <div className="flex flex-col items-center text-center gap-2">
+                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
+                    <span className="text-lg font-bold text-gold mt-1">
+                      {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPackageDialog("decor", pkg.id);
+                      }}
+                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                    >
+                      <Info className="h-3 w-3" />
+                      View details
+                    </button>
                   </div>
                 </div>
               ))}
-              {!selections.bringOwnDecorAV && selections.decorPackage && (
-                <button
-                  type="button"
-                  onClick={() => updateSelection("decorPackage", null)}
-                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
-                >
-                  Clear selection
-                </button>
-              )}
-            </RadioGroup>
+            </div>
+            {!selections.bringOwnDecorAV && selections.decorPackage && (
+              <button
+                type="button"
+                onClick={() => updateSelection("decorPackage", null)}
+                className="text-xs text-muted-foreground hover:text-foreground mt-3"
+              >
+                Clear selection
+              </button>
+            )}
           </CardContent>
         </Card>
 
@@ -318,46 +319,47 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <RadioGroup
-              value={selections.avPackage || ""}
-              onValueChange={(value) => updateSelection("avPackage", value || null)}
-              disabled={selections.bringOwnDecorAV}
-            >
+            <div className="grid grid-cols-3 gap-3">
               {currentAvPackages.map((pkg) => (
-                <div key={pkg.id} className="flex items-start space-x-3 py-1">
-                  <RadioGroupItem value={pkg.id} id={`av-${pkg.id}`} disabled={selections.bringOwnDecorAV} />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`av-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-                          {pkg.name}
-                        </Label>
-                        <button
-                          type="button"
-                          onClick={() => openPackageDialog("av", pkg.id)}
-                          className="text-muted-foreground hover:text-gold transition-colors"
-                        >
-                          <Info className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <span className="text-sm font-medium text-gold">
-                        {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{pkg.description}</p>
+                <div
+                  key={pkg.id}
+                  onClick={() => !selections.bringOwnDecorAV && updateSelection("avPackage", selections.avPackage === pkg.id ? null : pkg.id)}
+                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    selections.avPackage === pkg.id
+                      ? 'border-gold bg-gold/10'
+                      : 'border-border hover:border-gold/50 bg-muted/30'
+                  } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
+                >
+                  <div className="flex flex-col items-center text-center gap-2">
+                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
+                    <span className="text-lg font-bold text-gold mt-1">
+                      {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPackageDialog("av", pkg.id);
+                      }}
+                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                    >
+                      <Info className="h-3 w-3" />
+                      View details
+                    </button>
                   </div>
                 </div>
               ))}
-              {!selections.bringOwnDecorAV && selections.avPackage && (
-                <button
-                  type="button"
-                  onClick={() => updateSelection("avPackage", null)}
-                  className="text-xs text-muted-foreground hover:text-foreground mt-1"
-                >
-                  Clear selection
-                </button>
-              )}
-            </RadioGroup>
+            </div>
+            {!selections.bringOwnDecorAV && selections.avPackage && (
+              <button
+                type="button"
+                onClick={() => updateSelection("avPackage", null)}
+                className="text-xs text-muted-foreground hover:text-foreground mt-3"
+              >
+                Clear selection
+              </button>
+            )}
           </CardContent>
         </Card>
       </div>
