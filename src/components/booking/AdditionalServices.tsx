@@ -360,89 +360,89 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </RadioGroup>
           </CardContent>
         </Card>
-
-        {/* Catering - only for non-Ramadan events */}
-        {!isRamadan && (
-          <Card className="border-border hover:border-gold/50 transition-colors">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gold/10 rounded-lg">
-                    <UtensilsCrossed className="h-5 w-5 text-gold" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-base font-medium">Catering</CardTitle>
-                    <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-                  <Button
-                    type="button"
-                    variant={cateringType === "canope" ? "default" : "ghost"}
-                    size="sm"
-                    className="h-6 px-2 text-[10px]"
-                    onClick={() => setCateringType("canope")}
-                  >
-                    Canopé
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={cateringType === "dinner" ? "default" : "ghost"}
-                    size="sm"
-                    className="h-6 px-2 text-[10px]"
-                    onClick={() => setCateringType("dinner")}
-                  >
-                    Dinner
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="grid grid-cols-3 gap-3">
-                {currentCateringPackages.map((pkg) => (
-                  <div
-                    key={pkg.id}
-                    onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
-                    className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                      selections.cateringPackage === pkg.id
-                        ? 'border-gold bg-gold/10'
-                        : 'border-border hover:border-gold/50 bg-muted/30'
-                    }`}
-                  >
-                    <div className="flex flex-col items-center text-center gap-2">
-                      <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                      <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                      <span className="text-lg font-bold text-gold mt-1">
-                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openPackageDialog("catering", pkg.id);
-                        }}
-                        className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
-                      >
-                        <Info className="h-3 w-3" />
-                        View details
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {selections.cateringPackage && (
-                <button
-                  type="button"
-                  onClick={() => updateSelection("cateringPackage", null)}
-                  className="text-xs text-muted-foreground hover:text-foreground mt-3"
-                >
-                  Clear selection
-                </button>
-              )}
-            </CardContent>
-          </Card>
-        )}
       </div>
+
+      {/* Catering - only for non-Ramadan events - Full width */}
+      {!isRamadan && (
+        <Card className="border-border hover:border-gold/50 transition-colors mt-4">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gold/10 rounded-lg">
+                  <UtensilsCrossed className="h-5 w-5 text-gold" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-medium">Catering</CardTitle>
+                  <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                <Button
+                  type="button"
+                  variant={cateringType === "canope" ? "default" : "ghost"}
+                  size="sm"
+                  className="h-6 px-2 text-[10px]"
+                  onClick={() => setCateringType("canope")}
+                >
+                  Canopé
+                </Button>
+                <Button
+                  type="button"
+                  variant={cateringType === "dinner" ? "default" : "ghost"}
+                  size="sm"
+                  className="h-6 px-2 text-[10px]"
+                  onClick={() => setCateringType("dinner")}
+                >
+                  Dinner
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-3 gap-3">
+              {currentCateringPackages.map((pkg) => (
+                <div
+                  key={pkg.id}
+                  onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
+                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    selections.cateringPackage === pkg.id
+                      ? 'border-gold bg-gold/10'
+                      : 'border-border hover:border-gold/50 bg-muted/30'
+                  }`}
+                >
+                  <div className="flex flex-col items-center text-center gap-2">
+                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
+                    <span className="text-lg font-bold text-gold mt-1">
+                      {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPackageDialog("catering", pkg.id);
+                      }}
+                      className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
+                    >
+                      <Info className="h-3 w-3" />
+                      View details
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {selections.cateringPackage && (
+              <button
+                type="button"
+                onClick={() => updateSelection("cateringPackage", null)}
+                className="text-xs text-muted-foreground hover:text-foreground mt-3"
+              >
+                Clear selection
+              </button>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Bring Your Own Decorator/AV Banner */}
       <div className="mt-6">
