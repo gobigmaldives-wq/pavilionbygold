@@ -3,7 +3,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle } from "lucide-react";
+import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle, Copy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { SpaceType, getSpacesForDate } from "@/types/booking";
 import PackageDetailDialog from "./PackageDetailDialog";
@@ -43,6 +44,7 @@ const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 type PaymentOption = "option1" | "option2" | "option3";
 
 const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType, eventDate }: AdditionalServicesProps) => {
+  const { toast } = useToast();
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
   const [cateringType, setCateringType] = useState<"canope" | "dinner" | "iftar">("dinner");
   const [paymentOption, setPaymentOption] = useState<PaymentOption>("option1");
@@ -615,26 +617,100 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </div>
           </div>
           
-          {/* Bank Transfer Options */}
-          <div className="space-y-3 mb-4">
-            <p className="text-sm text-muted-foreground">Choose your bank for payment:</p>
-            <div className="flex flex-wrap gap-3">
-              <a 
-                href="https://www.bankofmaldives.com.mv/paylink" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
-              >
-                BML Paylink
-              </a>
-              <a 
-                href="https://www.mib.com.mv" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
-              >
-                MIB Paylink
-              </a>
+          {/* Bank Account Details */}
+          <div className="space-y-4 mb-4">
+            <p className="text-sm text-muted-foreground">Bank Account Details for Transfer:</p>
+            
+            {/* BML Account */}
+            <div className="p-3 bg-background rounded-lg border border-border">
+              <h4 className="font-semibold text-foreground mb-2">BML (Bank of Maldives)</h4>
+              <p className="text-sm text-muted-foreground mb-2">Account Name: <span className="text-foreground font-medium">Gold Company Pvt Ltd</span></p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2 p-2 bg-muted/50 rounded">
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">MVR: </span>
+                    <span className="font-mono text-foreground">7730000755659</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText("7730000755659");
+                      toast({ title: "Copied!", description: "BML MVR account number copied to clipboard" });
+                    }}
+                    className="shrink-0"
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between gap-2 p-2 bg-muted/50 rounded">
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">USD: </span>
+                    <span className="font-mono text-foreground">7730000755660</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText("7730000755660");
+                      toast({ title: "Copied!", description: "BML USD account number copied to clipboard" });
+                    }}
+                    className="shrink-0"
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* MIB Account */}
+            <div className="p-3 bg-background rounded-lg border border-border">
+              <h4 className="font-semibold text-foreground mb-2">MIB (Maldives Islamic Bank)</h4>
+              <p className="text-sm text-muted-foreground mb-2">Account Name: <span className="text-foreground font-medium">GOLD COMPANY</span></p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2 p-2 bg-muted/50 rounded">
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">MVR: </span>
+                    <span className="font-mono text-foreground">90101480043431000</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText("90101480043431000");
+                      toast({ title: "Copied!", description: "MIB MVR account number copied to clipboard" });
+                    }}
+                    className="shrink-0"
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between gap-2 p-2 bg-muted/50 rounded">
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">USD: </span>
+                    <span className="font-mono text-foreground">90101480043432000</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText("90101480043432000");
+                      toast({ title: "Copied!", description: "MIB USD account number copied to clipboard" });
+                    }}
+                    className="shrink-0"
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
