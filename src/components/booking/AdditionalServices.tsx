@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle } from "lucide-react";
 import { useState } from "react";
-import { SPACES, SpaceType } from "@/types/booking";
+import { SpaceType, getSpacesForDate } from "@/types/booking";
 import PackageDetailDialog from "./PackageDetailDialog";
 import {
   DECOR_PACKAGE_DETAILS,
@@ -35,11 +35,12 @@ interface AdditionalServicesProps {
   guestCount: number;
   selectedSpaces: SpaceType[];
   eventType: string;
+  eventDate?: Date;
 }
 
 const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
 
-const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType }: AdditionalServicesProps) => {
+const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType, eventDate }: AdditionalServicesProps) => {
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
   const [cateringType, setCateringType] = useState<"canope" | "dinner" | "iftar">("dinner");
   const [dialogOpen, setDialogOpen] = useState<{
@@ -94,9 +95,10 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     let totalRf = 0;
     let totalUsd = 0;
 
-    // Add all selected spaces' prices
+    // Add all selected spaces' prices using the correct pricing for the event date
+    const spacesForDate = getSpacesForDate(eventDate);
     selectedSpaces.forEach(spaceId => {
-      const space = SPACES.find(s => s.id === spaceId);
+      const space = spacesForDate.find(s => s.id === spaceId);
       if (space) {
         totalRf += space.basePriceMVR;
         totalUsd += space.basePriceUSD;

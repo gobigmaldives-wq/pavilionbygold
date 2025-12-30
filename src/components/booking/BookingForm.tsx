@@ -431,6 +431,7 @@ const BookingForm = () => {
             guestCount={watchedGuestCount || 0}
             selectedSpaces={selectedSpaces}
             eventType={form.watch("eventType") || "wedding"}
+            eventDate={watchedEventDate}
           />
 
           <FormField
