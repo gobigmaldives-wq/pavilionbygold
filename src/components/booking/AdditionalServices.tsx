@@ -403,16 +403,16 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                   <div
                     key={pkg.id}
                     onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
-                    className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all shadow-sm hover:shadow-md ${
+                    className={`relative px-4 py-5 rounded-xl border-2 cursor-pointer transition-all shadow-sm hover:shadow-md aspect-[4/3] flex items-center justify-center ${
                       selections.cateringPackage === pkg.id
                         ? 'border-gold bg-gold/10'
                         : 'border-border hover:border-gold/50 bg-card'
                     }`}
                   >
-                    <div className="flex flex-col items-center text-center gap-3">
+                    <div className="flex flex-col items-center text-center gap-2">
                       <h4 className="font-bold text-base">{pkg.name}</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed min-h-[40px]">{pkg.description}</p>
-                      <span className="text-2xl font-bold text-gold mt-2">
+                      <p className="text-xs text-muted-foreground leading-relaxed">{pkg.description}</p>
+                      <span className="text-xl font-bold text-gold mt-1">
                         {formatPrice(pkg.priceRf, pkg.priceUsd)}
                       </span>
                       <button
@@ -421,9 +421,9 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                           e.stopPropagation();
                           openPackageDialog("catering", pkg.id);
                         }}
-                        className="text-sm text-muted-foreground hover:text-gold transition-colors flex items-center gap-1.5 mt-2"
+                        className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center gap-1 mt-1"
                       >
-                        <Info className="h-4 w-4" />
+                        <Info className="h-3.5 w-3.5" />
                         View details
                       </button>
                     </div>
