@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle, Copy } from "lucide-react";
+import { Sparkles, Palette, Volume2, UtensilsCrossed, Info, AlertTriangle, Copy, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { SpaceType, getSpacesForDate } from "@/types/booking";
@@ -48,6 +48,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   const [currency, setCurrency] = useState<"rf" | "usd">("rf");
   const [cateringType, setCateringType] = useState<"canope" | "dinner" | "iftar">("dinner");
   const [paymentOption, setPaymentOption] = useState<PaymentOption>("option1");
+  const [transferSlip, setTransferSlip] = useState<File | null>(null);
   const [dialogOpen, setDialogOpen] = useState<{
     type: "decor" | "av" | "catering" | null;
     packageId: string | null;
@@ -722,12 +723,38 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             <p className="text-xs text-muted-foreground mb-2">
               After making payment, upload your transfer slip as proof of payment.
             </p>
-            <input
-              type="file"
-              id="transferSlip"
-              accept="image/*,.pdf"
-              className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 file:cursor-pointer cursor-pointer"
-            />
+            
+            {transferSlip ? (
+              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{transferSlip.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(transferSlip.size / 1024).toFixed(1)} KB
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setTransferSlip(null)}
+                  className="shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <X className="h-4 w-4" />
+                  Remove
+                </Button>
+              </div>
+            ) : (
+              <input
+                type="file"
+                id="transferSlip"
+                accept="image/*,.pdf"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) setTransferSlip(file);
+                }}
+                className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 file:cursor-pointer cursor-pointer"
+              />
+            )}
           </div>
         </div>
       )}
