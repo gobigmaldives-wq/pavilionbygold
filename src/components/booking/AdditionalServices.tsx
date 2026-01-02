@@ -285,10 +285,11 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                           e.stopPropagation();
                           openPackageDialog("catering", pkg.id);
                         }}
-                        className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                        className="mt-1 sm:mt-2 h-auto px-2 sm:px-3 py-1 sm:py-0 text-[10px] sm:text-xs whitespace-normal leading-tight flex-col sm:flex-row gap-0.5 sm:gap-1"
                       >
-                        <Eye className="h-3 w-3 mr-1" />
-                        View Details
+                        <Eye className="h-3 w-3 sm:mr-1" />
+                        <span className="hidden sm:inline">View Details</span>
+                        <span className="sm:hidden text-center">View<br />Details</span>
                       </Button>
                     </div>
                   </div>
@@ -350,10 +351,11 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                         e.stopPropagation();
                         openPackageDialog("decor", pkg.id);
                       }}
-                      className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                      className="mt-1 sm:mt-2 h-auto px-2 sm:px-3 py-1 sm:py-0 text-[10px] sm:text-xs whitespace-normal leading-tight flex-col sm:flex-row gap-0.5 sm:gap-1"
                     >
-                      <Eye className="h-3 w-3 mr-1" />
-                      View Details
+                      <Eye className="h-3 w-3 sm:mr-1" />
+                      <span className="hidden sm:inline">View Details</span>
+                      <span className="sm:hidden text-center">View<br />Details</span>
                     </Button>
                   </div>
                 </div>
@@ -411,10 +413,11 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                         e.stopPropagation();
                         openPackageDialog("av", pkg.id);
                       }}
-                      className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                      className="mt-1 sm:mt-2 h-auto px-2 sm:px-3 py-1 sm:py-0 text-[10px] sm:text-xs whitespace-normal leading-tight flex-col sm:flex-row gap-0.5 sm:gap-1"
                     >
-                      <Eye className="h-3 w-3 mr-1" />
-                      View Details
+                      <Eye className="h-3 w-3 sm:mr-1" />
+                      <span className="hidden sm:inline">View Details</span>
+                      <span className="sm:hidden text-center">View<br />Details</span>
                     </Button>
                   </div>
                 </div>
@@ -498,10 +501,11 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                           e.stopPropagation();
                           openPackageDialog("catering", pkg.id);
                         }}
-                        className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                        className="mt-1 sm:mt-2 h-auto px-2 sm:px-3 py-1 sm:py-0 text-[10px] sm:text-xs whitespace-normal leading-tight flex-col sm:flex-row gap-0.5 sm:gap-1"
                       >
-                        <Eye className="h-3 w-3 mr-1" />
-                        View Details
+                        <Eye className="h-3 w-3 sm:mr-1" />
+                        <span className="hidden sm:inline">View Details</span>
+                        <span className="sm:hidden text-center">View<br />Details</span>
                       </Button>
                     </div>
                   </div>
