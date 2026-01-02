@@ -195,7 +195,12 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   };
 
   const currentPackageData = dialogOpen.type && dialogOpen.packageId
-    ? getPackageDetails(dialogOpen.type, dialogOpen.packageId, eventType)
+    ? (() => {
+        if (dialogOpen.type === "catering") {
+          return currentCateringPackages.find((p) => p.id === dialogOpen.packageId);
+        }
+        return getPackageDetails(dialogOpen.type, dialogOpen.packageId, eventType);
+      })()
     : null;
 
   const { totalRf, totalUsd } = calculateTotal();
