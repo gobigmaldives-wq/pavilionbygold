@@ -81,41 +81,64 @@ const PackageDetailDialog = ({
               <Check className="h-4 w-4 text-gold" />
               What's Included
             </h3>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {packageData.includes.map((item, index) => (
-                <li
-                  key={index}
-                  className="flex items-start gap-2 text-sm text-muted-foreground"
-                >
-                  <Check className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
-                  <span>{item}</span>
-                </li>
-              ))}
+            <ul className="space-y-1">
+              {packageData.includes.map((item, index) => {
+                // Check if it's a category header (ends with ":")
+                const isHeader = item.endsWith(":");
+                // Check if it's a bullet item (starts with "•")
+                const isBulletItem = item.startsWith("•");
+                // Check if it's an empty line for spacing
+                const isEmpty = item === "";
+
+                if (isEmpty) {
+                  return <li key={index} className="h-2" />;
+                }
+
+                if (isHeader) {
+                  return (
+                    <li key={index} className="font-semibold text-foreground mt-3 first:mt-0">
+                      {item}
+                    </li>
+                  );
+                }
+
+                return (
+                  <li
+                    key={index}
+                    className={`flex items-start gap-2 text-sm text-muted-foreground ${isBulletItem ? "ml-2" : ""}`}
+                  >
+                    {!isBulletItem && <Check className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />}
+                    <span>{isBulletItem ? item.substring(2) : item}</span>
+                  </li>
+                );
+              })}
             </ul>
           </section>
 
-          {/* Past Weddings */}
-          <section>
-            <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-              <Image className="h-4 w-4 text-gold" />
-              Weddings with this Package
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {packageData.weddings.map((wedding, index) => (
-                <div
-                  key={index}
-                  className="bg-muted/50 rounded-lg p-3 border border-border"
-                >
-                  <div className="aspect-video bg-gradient-to-br from-gold/20 to-gold/5 rounded-md mb-2 flex items-center justify-center">
-                    <Image className="h-8 w-8 text-gold/40" />
+          {/* Images Section - Show different title for catering */}
+          {packageData.weddings && packageData.weddings.length > 0 && (
+            <section>
+              <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Image className="h-4 w-4 text-gold" />
+                {packageType === "catering" ? "Images of Menus" : "Weddings with this Package"}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {packageData.weddings.map((wedding, index) => (
+                  <div
+                    key={index}
+                    className="bg-muted/50 rounded-lg p-3 border border-border"
+                  >
+                    <div className="aspect-video bg-gradient-to-br from-gold/20 to-gold/5 rounded-md mb-2 flex items-center justify-center">
+                      <Image className="h-8 w-8 text-gold/40" />
+                    </div>
+                    <p className="font-medium text-sm text-foreground">{wedding.name}</p>
+                    <p className="text-xs text-muted-foreground">{wedding.date}</p>
+                    <p className="text-xs text-muted-foreground">{wedding.guestCount} guests</p>
                   </div>
-                  <p className="font-medium text-sm text-foreground">{wedding.name}</p>
-                  <p className="text-xs text-muted-foreground">{wedding.date}</p>
-                  <p className="text-xs text-muted-foreground">{wedding.guestCount} guests</p>
-                </div>
-              ))}
-            </div>
-          </section>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </DialogContent>
     </Dialog>
