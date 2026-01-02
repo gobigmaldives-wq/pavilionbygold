@@ -456,7 +456,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 </div>
                 <div>
                   <CardTitle className="text-base font-medium">Catering</CardTitle>
-                  <p className="text-xs text-muted-foreground">Gold Catering (exclusive partner)</p>
+                  <p className="text-xs text-muted-foreground">Exclusive partner</p>
                 </div>
               </div>
               <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
