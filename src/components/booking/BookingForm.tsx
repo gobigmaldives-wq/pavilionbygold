@@ -222,6 +222,35 @@ const BookingForm = () => {
         // Don't fail the booking if email fails
       }
 
+      // Send booking data to n8n webhook for Google Sheets, Calendar, WhatsApp
+      try {
+        const n8nWebhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL;
+        if (n8nWebhookUrl) {
+          await fetch(n8nWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            mode: "no-cors",
+            body: JSON.stringify({
+              fullName: data.fullName,
+              email: data.email,
+              phone: data.phone,
+              companyName: data.companyName || "",
+              eventType: data.eventType,
+              eventDate: format(data.eventDate, "yyyy-MM-dd"),
+              eventDateFormatted: format(data.eventDate, "MMMM d, yyyy"),
+              space: primarySpace,
+              guestCount: data.guestCount,
+              notes: additionalSpacesNote + (data.notes || ""),
+              submittedAt: new Date().toISOString(),
+            }),
+          });
+          console.log("n8n webhook triggered successfully");
+        }
+      } catch (webhookError) {
+        console.error("n8n webhook error:", webhookError);
+        // Don't fail the booking if webhook fails
+      }
+
       toast.success("Booking request submitted successfully!", {
         description: "We'll contact you shortly to confirm your reservation.",
       });
