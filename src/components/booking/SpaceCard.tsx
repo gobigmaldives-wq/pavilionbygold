@@ -20,7 +20,8 @@ const SpaceCard = ({ space, selected, onSelect, disabled, disabledReason, curren
       onClick={onSelect}
       disabled={disabled}
       className={cn(
-        "relative w-full p-6 rounded-lg border-2 text-left transition-all duration-300",
+        "relative w-full p-5 sm:p-6 rounded-lg border-2 text-left transition-all duration-300",
+        "min-h-[160px] sm:min-h-[180px]",
         "hover:shadow-lg hover:border-gold/50",
         selected 
           ? "border-gold bg-gold/5 shadow-lg" 
