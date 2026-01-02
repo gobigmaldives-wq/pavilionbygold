@@ -94,11 +94,11 @@ const PackageDetailDialog = ({
             </ul>
           </section>
 
-          {/* Past Weddings */}
+          {/* Past Weddings / Menu Images */}
           <section>
             <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
               <Image className="h-4 w-4 text-gold" />
-              Weddings with this Package
+              {packageType === "catering" ? "Images of menus in catering" : "Weddings with this Package"}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {packageData.weddings.map((wedding, index) => (
