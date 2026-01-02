@@ -340,13 +340,11 @@ export const CATERING_CANOPE_DETAILS: PackageDetail[] = [
     priceRf: 145,
     priceUsd: 9,
     includes: [
-      "Welcome drinks",
-      "4 canapé varieties",
-      "2 short eats options",
-      "Mini desserts",
-      "Soft drinks & water",
-      "Professional service staff",
-      "Table setup & cleanup",
+      "CANAPÉ: Grilled Tuna, Bruschetta, Chicken Stroganoff, Mini Chicken Pizza",
+      "SHORTEATS: Mini Tuna Roll, Mini Chicken Puff, Fihunu Bajiya, Cutlets",
+      "SWEETS: Mini Chocolate Eclairs, Chocolate Cake, Fruit Cake",
+      "BEVERAGE: Fresh Juice Packet (Multiple Flavors), Mineral Water",
+      "MOUTH REFRESHENER: Nuts",
     ],
     weddings: [
       { name: "Asif & Jameela", date: "January 2025", guestCount: 100 },
