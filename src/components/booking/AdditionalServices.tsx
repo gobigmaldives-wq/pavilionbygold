@@ -257,36 +257,40 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {currentCateringPackages.map((pkg) => (
                 <div
                   key={pkg.id}
                   onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
-                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  className={`relative p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[140px] sm:min-h-[180px] ${
                     selections.cateringPackage === pkg.id
                       ? 'border-gold bg-gold/10'
                       : 'border-border hover:border-gold/50 bg-muted/30'
                   }`}
                 >
-                  <div className="flex flex-col items-center text-center gap-2">
-                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                    <span className="text-lg font-bold text-gold mt-1">
-                      {formatPrice(pkg.priceRf, pkg.priceUsd)}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openPackageDialog("catering", pkg.id);
-                      }}
-                      className="mt-2 text-xs h-7 px-3"
-                    >
-                      <Eye className="h-3 w-3 mr-1" />
-                      View Details
-                    </Button>
+                  <div className="flex flex-col items-center text-center gap-1 sm:gap-2 h-full justify-between">
+                    <div>
+                      <h4 className="font-semibold text-xs sm:text-sm">{pkg.name}</h4>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2 mt-1">{pkg.description}</p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-sm sm:text-lg font-bold text-gold">
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openPackageDialog("catering", pkg.id);
+                        }}
+                        className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                      >
+                        <Eye className="h-3 w-3 mr-1" />
+                        View Details
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -318,36 +322,40 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {currentDecorPackages.map((pkg) => (
               <div
                 key={pkg.id}
                 onClick={() => !selections.bringOwnDecorAV && updateSelection("decorPackage", selections.decorPackage === pkg.id ? null : pkg.id)}
-                className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                className={`relative p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[140px] sm:min-h-[180px] ${
                   selections.decorPackage === pkg.id
                     ? 'border-gold bg-gold/10'
                     : 'border-border hover:border-gold/50 bg-muted/30'
                 } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
               >
-                <div className="flex flex-col items-center text-center gap-2">
-                  <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                  <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                  <span className="text-lg font-bold text-gold mt-1">
-                    {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
-                  </span>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openPackageDialog("decor", pkg.id);
-                    }}
-                    className="mt-2 text-xs h-7 px-3"
-                  >
-                    <Eye className="h-3 w-3 mr-1" />
-                    View Details
-                  </Button>
+                <div className="flex flex-col items-center text-center gap-1 sm:gap-2 h-full justify-between">
+                  <div>
+                    <h4 className="font-semibold text-xs sm:text-sm">{pkg.name}</h4>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2 mt-1">{pkg.description}</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm sm:text-lg font-bold text-gold">
+                      {formatPrice(getDecorPrice(pkg.id).rf, getDecorPrice(pkg.id).usd)}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPackageDialog("decor", pkg.id);
+                      }}
+                      className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                    >
+                      <Eye className="h-3 w-3 mr-1" />
+                      View Details
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -375,36 +383,40 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {currentAvPackages.map((pkg) => (
               <div
                 key={pkg.id}
                 onClick={() => !selections.bringOwnDecorAV && updateSelection("avPackage", selections.avPackage === pkg.id ? null : pkg.id)}
-                className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                className={`relative p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[140px] sm:min-h-[180px] ${
                   selections.avPackage === pkg.id
                     ? 'border-gold bg-gold/10'
                     : 'border-border hover:border-gold/50 bg-muted/30'
                 } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
               >
-                <div className="flex flex-col items-center text-center gap-2">
-                  <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                  <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                  <span className="text-lg font-bold text-gold mt-1">
-                    {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
-                  </span>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openPackageDialog("av", pkg.id);
-                    }}
-                    className="mt-2 text-xs h-7 px-3"
-                  >
-                    <Eye className="h-3 w-3 mr-1" />
-                    View Details
-                  </Button>
+                <div className="flex flex-col items-center text-center gap-1 sm:gap-2 h-full justify-between">
+                  <div>
+                    <h4 className="font-semibold text-xs sm:text-sm">{pkg.name}</h4>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2 mt-1">{pkg.description}</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm sm:text-lg font-bold text-gold">
+                      {formatPrice(getAvPrice(pkg.id).rf, getAvPrice(pkg.id).usd)}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPackageDialog("av", pkg.id);
+                      }}
+                      className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                    >
+                      <Eye className="h-3 w-3 mr-1" />
+                      View Details
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -458,36 +470,40 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {currentCateringPackages.map((pkg) => (
                 <div
                   key={pkg.id}
                   onClick={() => updateSelection("cateringPackage", selections.cateringPackage === pkg.id ? null : pkg.id)}
-                  className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  className={`relative p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[140px] sm:min-h-[180px] ${
                     selections.cateringPackage === pkg.id
                       ? 'border-gold bg-gold/10'
                       : 'border-border hover:border-gold/50 bg-muted/30'
                   }`}
                 >
-                  <div className="flex flex-col items-center text-center gap-2">
-                    <h4 className="font-semibold text-sm">{pkg.name}</h4>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{pkg.description}</p>
-                    <span className="text-lg font-bold text-gold mt-1">
-                      {formatPrice(pkg.priceRf, pkg.priceUsd)}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openPackageDialog("catering", pkg.id);
-                      }}
-                      className="mt-2 text-xs h-7 px-3"
-                    >
-                      <Eye className="h-3 w-3 mr-1" />
-                      View Details
-                    </Button>
+                  <div className="flex flex-col items-center text-center gap-1 sm:gap-2 h-full justify-between">
+                    <div>
+                      <h4 className="font-semibold text-xs sm:text-sm">{pkg.name}</h4>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2 mt-1">{pkg.description}</p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-sm sm:text-lg font-bold text-gold">
+                        {formatPrice(pkg.priceRf, pkg.priceUsd)}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openPackageDialog("catering", pkg.id);
+                        }}
+                        className="mt-1 sm:mt-2 text-[10px] sm:text-xs h-6 sm:h-7 px-2 sm:px-3"
+                      >
+                        <Eye className="h-3 w-3 mr-1" />
+                        View Details
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
