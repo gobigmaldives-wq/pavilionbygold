@@ -208,7 +208,7 @@ const BookingForm = () => {
             space: primarySpace,
             guestCount: data.guestCount,
             notes: additionalSpacesNote + (data.notes || ""),
-            adminEmail: "admin@pavilionbygold.com", // Replace with your actual admin email
+            adminEmail: "sales@pavilionbygold.com",
           },
         });
         
