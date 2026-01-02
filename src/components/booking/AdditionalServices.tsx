@@ -15,6 +15,8 @@ import {
   CATERING_CANOPE_DETAILS,
   CATERING_IFTAR_DETAILS,
   CATERING_DINNER_DETAILS,
+  CATERING_CANOPE_BY_EVENT,
+  CATERING_DINNER_BY_EVENT,
   DECOR_PRICES_BY_EVENT,
   AV_PRICES_BY_EVENT,
   AV_DETAILS_BY_EVENT,
@@ -56,11 +58,13 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
     packageId: string | null;
   }>({ type: null, packageId: null });
 
-  // For Ramadan, use Iftar packages; otherwise use selected catering type
+  // For Ramadan, use Iftar packages; otherwise use selected catering type based on event
   const isRamadan = eventType === "ramadan";
   const currentCateringPackages = isRamadan 
     ? CATERING_IFTAR_DETAILS 
-    : (cateringType === "canope" ? CATERING_CANOPE_DETAILS : CATERING_DINNER_DETAILS);
+    : (cateringType === "canope" 
+        ? (CATERING_CANOPE_BY_EVENT[eventType] || CATERING_CANOPE_DETAILS)
+        : (CATERING_DINNER_BY_EVENT[eventType] || CATERING_DINNER_DETAILS));
   
   // Get event-specific pricing and package details
   const decorPrices = DECOR_PRICES_BY_EVENT[eventType] || DECOR_PRICES_BY_EVENT.wedding;
