@@ -32,7 +32,7 @@ export interface ServiceSelections {
   bringOwnDecorAV: boolean;
 }
 
-export type PaymentOption = "option1" | "option2" | "option3";
+export type PaymentOption = "option1" | "option2" | "option3" | "option4";
 
 interface AdditionalServicesProps {
   selections: ServiceSelections;
@@ -606,7 +606,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 <div className="font-medium text-foreground">Option 1 – Venue Only Deposit</div>
                 <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
                   <li>• 100% Venue Charges now</li>
-                  <li className="text-amber-600 dark:text-amber-400">• Remaining services balance due 7 days before event</li>
+                  <li className="text-amber-600 dark:text-amber-400">• Remaining services balance due 30 days before event</li>
                 </ul>
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option1").rf, calculatePaymentAmount("option1").usd)}
@@ -620,7 +620,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 <div className="font-medium text-foreground">Option 2 – 50% Deposit</div>
                 <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
                   <li>• 50% of all selected services now</li>
-                  <li className="text-amber-600 dark:text-amber-400">• Remaining 50% due 7 days before event</li>
+                  <li className="text-amber-600 dark:text-amber-400">• Remaining 50% due 30 days before event</li>
                 </ul>
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option2").rf, calculatePaymentAmount("option2").usd)}
@@ -639,6 +639,17 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 <div className="text-sm font-semibold text-gold mt-2">
                   Amount: {formatPrice(calculatePaymentAmount("option3").rf, calculatePaymentAmount("option3").usd)}
                 </div>
+              </Label>
+            </div>
+            
+            <div className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${paymentOption === "option4" ? "border-gold bg-gold/10" : "border-border hover:border-gold/50"}`}>
+              <RadioGroupItem value="option4" id="payOption4" className="mt-1" />
+              <Label htmlFor="payOption4" className="flex-1 cursor-pointer">
+                <div className="font-medium text-foreground">Option 4 – Tentative Reservation</div>
+                <ul className="text-sm text-muted-foreground mt-1 space-y-0.5">
+                  <li>• Reservation is noted for discussion purposes only</li>
+                  <li className="text-amber-600 dark:text-amber-400">• Confirmation is subject to payment and management approval</li>
+                </ul>
               </Label>
             </div>
           </RadioGroup>
