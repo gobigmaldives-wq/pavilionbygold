@@ -552,9 +552,9 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
                 className="h-5 w-5"
               />
               <div>
-                <h3 className="font-semibold text-foreground">External Vendor Access & Operations Fee</h3>
+                <h3 className="font-semibold text-foreground">Bring Your Own Decorator or AV Services</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  If you choose to engage your own decorator or AV service provider, this fee applies to cover controlled venue access, scheduling and setup windows, power and utility usage, and required on-site operational support during installation, the event, and dismantling.
+                  <span className="font-medium text-foreground">External Vendor Access & Operations Fee:</span> If you choose to engage your own decorator or AV service provider, this fee applies to cover controlled venue access, scheduling and setup windows, power and utility usage, and required on-site operational support during installation, the event, and dismantling.
                 </p>
               </div>
             </div>
@@ -562,7 +562,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               <p className="text-lg font-bold text-gold">
                 {formatPrice(BRING_OWN_FEE.priceRf, BRING_OWN_FEE.priceUsd)}
               </p>
-              <p className="text-xs text-muted-foreground">Coordination fee</p>
+              <p className="text-xs text-muted-foreground">External Vendor Access & Operations Fee</p>
             </div>
           </div>
           {selections.bringOwnDecorAV && (
