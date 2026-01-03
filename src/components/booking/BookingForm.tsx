@@ -178,22 +178,45 @@ const BookingForm = () => {
         }
       }
       
-      const { error } = await supabase.from("bookings").insert({
-        full_name: data.fullName,
-        phone: data.phone,
-        email: data.email,
-        company_name: data.companyName || null,
-        event_type: data.eventType,
-        event_date: format(data.eventDate, "yyyy-MM-dd"),
-        space: primarySpace,
-        guest_count: data.guestCount,
-        notes: additionalSpacesNote + (data.notes || ""),
-        agreed_to_rules: data.agreedToRules,
-        agreed_at: new Date().toISOString(),
-        transfer_slip_url: transferSlipUrl,
+      // Use rate-limited edge function for booking submission
+      const { data: bookingResponse, error } = await supabase.functions.invoke("create-booking", {
+        body: {
+          full_name: data.fullName,
+          phone: data.phone,
+          email: data.email,
+          company_name: data.companyName || null,
+          event_type: data.eventType,
+          event_date: format(data.eventDate, "yyyy-MM-dd"),
+          space: primarySpace,
+          guest_count: data.guestCount,
+          notes: additionalSpacesNote + (data.notes || ""),
+          agreed_to_rules: data.agreedToRules,
+          agreed_at: new Date().toISOString(),
+          transfer_slip_url: transferSlipUrl,
+        },
       });
 
-      if (error) throw error;
+      if (error) {
+        // Check for rate limit error
+        if (error.message?.includes("Rate limit") || error.message?.includes("429")) {
+          toast.error("Too many requests", {
+            description: "Please wait a few minutes before submitting another booking.",
+          });
+          return;
+        }
+        throw error;
+      }
+      
+      // Check if the response indicates an error
+      if (bookingResponse?.error) {
+        if (bookingResponse.retryAfterSeconds) {
+          toast.error("Too many requests", {
+            description: `Please wait ${Math.ceil(bookingResponse.retryAfterSeconds / 60)} minutes before submitting another booking.`,
+          });
+          return;
+        }
+        throw new Error(bookingResponse.error);
+      }
 
       // Send email notifications
       try {
