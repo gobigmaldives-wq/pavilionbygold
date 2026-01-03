@@ -562,7 +562,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               <p className="text-lg font-bold text-gold">
                 {formatPrice(BRING_OWN_FEE.priceRf, BRING_OWN_FEE.priceUsd)}
               </p>
-              <p className="text-xs text-muted-foreground">External Vendor Access & Operations Fee</p>
+              <p className="text-xs text-muted-foreground">External Vendor Access<br />& Operations Fee</p>
             </div>
           </div>
           {selections.bringOwnDecorAV && (
