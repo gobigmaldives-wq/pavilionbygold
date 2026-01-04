@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Insert booking
+    // Insert booking - only select id and event_date to avoid returning sensitive data
     const { data, error } = await supabase.from("bookings").insert({
       full_name: body.full_name,
       phone: body.phone,
@@ -130,20 +130,30 @@ Deno.serve(async (req) => {
       agreed_to_rules: body.agreed_to_rules || false,
       agreed_at: body.agreed_at || null,
       transfer_slip_url: body.transfer_slip_url || null,
-    }).select().single();
+    }).select('id, event_date, space, created_at').single();
 
     if (error) {
       console.error("Database insert error:", error);
+      // Return generic error message without exposing database details
       return new Response(
-        JSON.stringify({ error: "Failed to create booking", details: error.message }),
+        JSON.stringify({ error: "Failed to create booking. Please try again later." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     console.log(`Booking created successfully: ${data.id}`);
 
+    // Return only non-sensitive confirmation data
     return new Response(
-      JSON.stringify({ success: true, booking: data }),
+      JSON.stringify({ 
+        success: true, 
+        booking: {
+          id: data.id,
+          event_date: data.event_date,
+          space: data.space,
+          created_at: data.created_at
+        }
+      }),
       { status: 201, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 
