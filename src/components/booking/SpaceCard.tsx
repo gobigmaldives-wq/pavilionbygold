@@ -56,6 +56,7 @@ const SpaceCard = ({ space, selected, onSelect, disabled, disabledReason, curren
             {currency === "rf" 
               ? `Rf. ${space.basePriceMVR.toLocaleString()}` 
               : `$${space.basePriceUSD.toLocaleString()}`}
+            <span className="text-xs text-muted-foreground font-normal ml-1">/24hrs</span>
           </div>
           {isPreOpeningRate && (
             <div className="flex items-center gap-1 text-xs text-emerald-600 mt-1">
