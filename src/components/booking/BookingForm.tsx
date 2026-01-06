@@ -497,21 +497,32 @@ const BookingForm = () => {
                   </p>
                   <FormControl>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      {getSpacesForDate(watchedEventDate).map((space) => {
-                        const isGardenDisabled = space.id === "floor1_garden" && !canSelectGarden;
-                        return (
-                          <SpaceCard
-                            key={space.id}
-                            space={space}
-                            selected={selectedSpaces.includes(space.id)}
-                            currency={spaceCurrency}
-                            eventDate={watchedEventDate}
-                            onSelect={() => handleSpaceSelect(space.id, field.onChange)}
-                            disabled={isGardenDisabled}
-                            disabledReason={isGardenDisabled ? "Select Floor 1 or Floor 2 first" : undefined}
-                          />
-                        );
-                      })}
+                      {getSpacesForDate(watchedEventDate)
+                        .filter((space) => {
+                          // Floor 1 Outdoor Garden is only available after February 28, 2026
+                          if (space.id === "floor1_garden") {
+                            const gardenAvailableDate = new Date(2026, 1, 28); // Feb 28, 2026
+                            if (!watchedEventDate || watchedEventDate <= gardenAvailableDate) {
+                              return false;
+                            }
+                          }
+                          return true;
+                        })
+                        .map((space) => {
+                          const isGardenDisabled = space.id === "floor1_garden" && !canSelectGarden;
+                          return (
+                            <SpaceCard
+                              key={space.id}
+                              space={space}
+                              selected={selectedSpaces.includes(space.id)}
+                              currency={spaceCurrency}
+                              eventDate={watchedEventDate}
+                              onSelect={() => handleSpaceSelect(space.id, field.onChange)}
+                              disabled={isGardenDisabled}
+                              disabledReason={isGardenDisabled ? "Select Floor 1 or Floor 2 first" : undefined}
+                            />
+                          );
+                        })}
                     </div>
                   </FormControl>
                   <FormMessage />
