@@ -10,6 +10,7 @@ export interface Space {
   id: SpaceType;
   name: string;
   capacity: number;
+  maxCapacity: string; // Maximum capacity during 3-4 hour events
   basePriceMVR: number;
   basePriceUSD: number;
   description: string;
@@ -81,6 +82,7 @@ export const SPACES: Space[] = [
     id: 'floor1',
     name: 'Floor 1',
     capacity: 140,
+    maxCapacity: '300 - 350 pax',
     basePriceMVR: 14000,
     basePriceUSD: 900,
     description: 'Elegant main floor with marble finishes and crystal chandeliers',
@@ -89,6 +91,7 @@ export const SPACES: Space[] = [
     id: 'floor1_garden',
     name: 'Floor 1 Outdoor Garden',
     capacity: 60,
+    maxCapacity: '80 - 100 pax',
     basePriceMVR: 10000,
     basePriceUSD: 650,
     description: 'Beautiful outdoor garden space with natural ambiance',
@@ -97,6 +100,7 @@ export const SPACES: Space[] = [
     id: 'floor2',
     name: 'Floor 2',
     capacity: 160,
+    maxCapacity: '300 - 350 pax',
     basePriceMVR: 14000,
     basePriceUSD: 900,
     description: 'Upper level with panoramic views and intimate setting',
@@ -105,6 +109,7 @@ export const SPACES: Space[] = [
     id: 'entire_venue',
     name: 'Entire Venue',
     capacity: 360,
+    maxCapacity: '600 - 700 pax',
     basePriceMVR: 37000,
     basePriceUSD: 2400,
     description: 'Complete venue access including all floors and garden',
@@ -117,6 +122,7 @@ export const SPACES_REGULAR: Space[] = [
     id: 'floor1',
     name: 'Floor 1',
     capacity: 140,
+    maxCapacity: '300 - 350 pax',
     basePriceMVR: 20000,
     basePriceUSD: 1300,
     description: 'Elegant main floor with marble finishes and crystal chandeliers',
@@ -125,6 +131,7 @@ export const SPACES_REGULAR: Space[] = [
     id: 'floor1_garden',
     name: 'Floor 1 Outdoor Garden',
     capacity: 60,
+    maxCapacity: '80 - 100 pax',
     basePriceMVR: 12000,
     basePriceUSD: 780,
     description: 'Beautiful outdoor garden space with natural ambiance',
@@ -133,6 +140,7 @@ export const SPACES_REGULAR: Space[] = [
     id: 'floor2',
     name: 'Floor 2',
     capacity: 160,
+    maxCapacity: '300 - 350 pax',
     basePriceMVR: 25000,
     basePriceUSD: 1620,
     description: 'Upper level with panoramic views and intimate setting',
@@ -141,6 +149,7 @@ export const SPACES_REGULAR: Space[] = [
     id: 'entire_venue',
     name: 'Entire Venue',
     capacity: 360,
+    maxCapacity: '600 - 700 pax',
     basePriceMVR: 55000,
     basePriceUSD: 3570,
     description: 'Complete venue access including all floors and garden',
@@ -162,6 +171,7 @@ const ENTIRE_VENUE_JANUARY_2026: Space = {
   id: 'entire_venue',
   name: 'Entire Venue',
   capacity: 360,
+  maxCapacity: '600 - 700 pax',
   basePriceMVR: 23000,
   basePriceUSD: 1492,
   description: 'Complete venue access including all floors and garden',

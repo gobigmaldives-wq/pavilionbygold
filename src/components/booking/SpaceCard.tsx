@@ -44,9 +44,11 @@ const SpaceCard = ({ space, selected, onSelect, disabled, disabledReason, curren
       )}
       
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Users size={16} />
-          <span className="text-sm">Up to {space.capacity} guests</span>
+        <div className="flex flex-col gap-1 text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Users size={16} />
+            <span className="text-sm">Max Capacity (3-4 hrs): {space.maxCapacity}</span>
+          </div>
         </div>
         <div className="text-right">
           <div className="text-gold font-semibold">
