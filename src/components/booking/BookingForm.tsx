@@ -304,7 +304,7 @@ const BookingForm = () => {
                 <FormItem>
                   <FormLabel>Full Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your full name" {...field} />
+                    <Input placeholder="Enter your full name" enterKeyHint="next" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -318,7 +318,7 @@ const BookingForm = () => {
                 <FormItem>
                   <FormLabel>Phone number for WhatsApp *</FormLabel>
                   <FormControl>
-                    <Input placeholder="+960 123-456" {...field} />
+                    <Input placeholder="+960 123-456" enterKeyHint="next" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -332,7 +332,7 @@ const BookingForm = () => {
                 <FormItem>
                   <FormLabel>Email Address *</FormLabel>
                   <FormControl>
-                    <Input placeholder="you@example.com" type="email" {...field} />
+                    <Input placeholder="you@example.com" type="email" enterKeyHint="next" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -346,7 +346,7 @@ const BookingForm = () => {
                 <FormItem>
                   <FormLabel>Company Name (Optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your company name" {...field} />
+                    <Input placeholder="Your company name" enterKeyHint="next" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -441,9 +441,17 @@ const BookingForm = () => {
                     <FormControl>
                       <Input 
                         type="number" 
+                        inputMode="numeric"
                         placeholder="Expected number of guests"
+                        enterKeyHint="done"
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleGuestCountDone();
+                          }
+                        }}
                         className="flex-1"
                       />
                     </FormControl>
