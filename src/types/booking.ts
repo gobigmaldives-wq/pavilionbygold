@@ -85,7 +85,7 @@ export const SPACES: Space[] = [
     maxCapacity: '350 pax',
     basePriceMVR: 14000,
     basePriceUSD: 900,
-    description: 'Elegant main floor with marble finishes and crystal chandeliers',
+    description: 'Elegant main floor with white finishes and crystal chandeliers',
   },
   {
     id: 'floor1_garden',
@@ -125,7 +125,7 @@ export const SPACES_REGULAR: Space[] = [
     maxCapacity: '350 pax',
     basePriceMVR: 20000,
     basePriceUSD: 1300,
-    description: 'Elegant main floor with marble finishes and crystal chandeliers',
+    description: 'Elegant main floor with white finishes and crystal chandeliers',
   },
   {
     id: 'floor1_garden',
