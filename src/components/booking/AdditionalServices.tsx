@@ -47,7 +47,7 @@ interface AdditionalServicesProps {
   onTransferSlipChange: (file: File | null) => void;
 }
 
-const BRING_OWN_FEE = { priceRf: 60000, priceUsd: 3900 };
+
 
 const AdditionalServices = ({ selections, onSelectionChange, guestCount, selectedSpaces, eventType, eventDate, paymentOption, onPaymentOptionChange, transferSlip, onTransferSlipChange }: AdditionalServicesProps) => {
   const { toast } = useToast();
@@ -84,18 +84,6 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
 
   const updateSelection = (key: keyof ServiceSelections, value: boolean | string | null) => {
     const newSelections = { ...selections, [key]: value };
-    
-    // If "bring your own" is selected, clear decor and AV packages
-    if (key === "bringOwnDecorAV" && value === true) {
-      newSelections.decorPackage = null;
-      newSelections.avPackage = null;
-    }
-    
-    // If selecting a decor or AV package, turn off "bring your own"
-    if ((key === "decorPackage" || key === "avPackage") && value !== null) {
-      newSelections.bringOwnDecorAV = false;
-    }
-    
     onSelectionChange(newSelections);
   };
 
@@ -119,11 +107,6 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       }
     });
 
-    // Bring own fee counts as venue coordination
-    if (selections.bringOwnDecorAV) {
-      venueRf += BRING_OWN_FEE.priceRf;
-      venueUsd += BRING_OWN_FEE.priceUsd;
-    }
 
     // Decor charges
     if (selections.decorPackage && !selections.bringOwnDecorAV) {
@@ -210,8 +193,6 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
   const { totalRf, totalUsd } = calculateTotal();
   const hasSelections = selectedSpaces.length > 0 || selections.decorPackage || selections.avPackage || selections.cateringPackage || selections.bringOwnDecorAV;
 
-  // Check if decor OR AV requirement is met
-  const hasDecorOrAV = selections.decorPackage || selections.avPackage || selections.bringOwnDecorAV;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 md:p-8">
@@ -319,7 +300,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       )}
 
       {/* Decor - Full width */}
-      <Card className={`border-border hover:border-gold/50 transition-colors ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
+      <Card className="border-border hover:border-gold/50 transition-colors">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-gold/10 rounded-lg">
@@ -336,12 +317,12 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             {currentDecorPackages.map((pkg) => (
               <div
                 key={pkg.id}
-                onClick={() => !selections.bringOwnDecorAV && updateSelection("decorPackage", selections.decorPackage === pkg.id ? null : pkg.id)}
+                onClick={() => updateSelection("decorPackage", selections.decorPackage === pkg.id ? null : pkg.id)}
                 className={`relative p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[140px] sm:min-h-[180px] ${
                   selections.decorPackage === pkg.id
                     ? 'border-gold bg-gold/10'
                     : 'border-border hover:border-gold/50 bg-muted/30'
-                } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
+                }`}
               >
                 <div className="flex flex-col items-center text-center gap-1 sm:gap-2 h-full justify-between">
                   <div>
@@ -371,7 +352,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               </div>
             ))}
           </div>
-          {!selections.bringOwnDecorAV && selections.decorPackage && (
+          {selections.decorPackage && (
             <button
               type="button"
               onClick={() => updateSelection("decorPackage", null)}
@@ -384,7 +365,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
       </Card>
 
       {/* AV - Full width */}
-      <Card className={`border-border hover:border-gold/50 transition-colors mt-4 ${selections.bringOwnDecorAV ? 'opacity-50' : ''}`}>
+      <Card className="border-border hover:border-gold/50 transition-colors mt-4">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-gold/10 rounded-lg">
@@ -398,12 +379,12 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
             {currentAvPackages.map((pkg) => (
               <div
                 key={pkg.id}
-                onClick={() => !selections.bringOwnDecorAV && updateSelection("avPackage", selections.avPackage === pkg.id ? null : pkg.id)}
+                onClick={() => updateSelection("avPackage", selections.avPackage === pkg.id ? null : pkg.id)}
                 className={`relative p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[140px] sm:min-h-[180px] ${
                   selections.avPackage === pkg.id
                     ? 'border-gold bg-gold/10'
                     : 'border-border hover:border-gold/50 bg-muted/30'
-                } ${selections.bringOwnDecorAV ? 'cursor-not-allowed' : ''}`}
+                }`}
               >
                 <div className="flex flex-col items-center text-center gap-1 sm:gap-2 h-full justify-between">
                   <div>
@@ -433,7 +414,7 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
               </div>
             ))}
           </div>
-          {!selections.bringOwnDecorAV && selections.avPackage && (
+          {selections.avPackage && (
             <button
               type="button"
               onClick={() => updateSelection("avPackage", null)}
@@ -534,54 +515,6 @@ const AdditionalServices = ({ selections, onSelectionChange, guestCount, selecte
         </Card>
       )}
 
-      {/* Bring Your Own Decorator/AV Banner */}
-      <div className="mt-6">
-        <div 
-          className={`relative overflow-hidden rounded-xl border-2 transition-all ${
-            selections.bringOwnDecorAV 
-              ? 'border-gold bg-gold/10' 
-              : 'border-border bg-gradient-to-r from-muted/50 to-muted hover:border-gold/50'
-          }`}
-        >
-          <div className="flex items-center justify-between p-4 md:p-6">
-            <div className="flex items-center gap-4">
-              <Checkbox
-                id="bringOwnDecorAV"
-                checked={selections.bringOwnDecorAV}
-                onCheckedChange={(checked) => updateSelection("bringOwnDecorAV", checked as boolean)}
-                className="h-5 w-5"
-              />
-              <div>
-                <h3 className="font-semibold text-foreground">Bring Your Own Decorator or AV Services</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  <span className="font-medium text-foreground">External Vendor Access & Operations Fee:</span> If you choose to engage your own decorator or AV service provider, this fee applies to cover controlled venue access, scheduling and setup windows, power and utility usage, and required on-site operational support during installation, the event, and dismantling.
-                </p>
-              </div>
-            </div>
-            <div className="text-right shrink-0">
-              <p className="text-lg font-bold text-gold">
-                {formatPrice(BRING_OWN_FEE.priceRf, BRING_OWN_FEE.priceUsd)}
-              </p>
-              <p className="text-xs text-muted-foreground">External Vendor Access<br />& Operations Fee</p>
-            </div>
-          </div>
-          {selections.bringOwnDecorAV && (
-            <div className="bg-gold/20 px-4 py-2 text-sm text-foreground">
-              <span className="font-medium">Note:</span> This option replaces in-house Decor & AV packages. Catering remains exclusive to our partner.
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Validation message */}
-      {!hasDecorOrAV && selectedSpaces.length > 0 && (
-        <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-          <p className="text-sm text-destructive">
-            Please select at least one Decor package, AV package, or choose to bring your own.
-          </p>
-        </div>
-      )}
 
       {/* Running Total */}
       {hasSelections && (
